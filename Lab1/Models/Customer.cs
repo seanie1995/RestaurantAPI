@@ -16,7 +16,7 @@ namespace Lab1.Models
         [Required]
         public string Email { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
 
     }
 }

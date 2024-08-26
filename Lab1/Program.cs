@@ -1,5 +1,9 @@
 
 using Lab1.Data;
+using Lab1.Data.Repos;
+using Lab1.Data.Repos.IRepos;
+using Lab1.Services;
+using Lab1.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lab1
@@ -19,6 +23,8 @@ namespace Lab1
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
+            builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 
             var app = builder.Build();
 

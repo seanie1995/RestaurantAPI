@@ -6,9 +6,9 @@ namespace Lab1.Data.Repos.IRepos
     {
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task<Customer> GetCustomerByIdAsync(int id);
-        Task AddCustomer(Customer customer);
-        Task UpdateCustomer(Customer customer, Customer newCustomer);
-        Task DeleteCustomer(int id);
+        Task AddCustomerAsync(Customer customer);
+        Task UpdateCustomerAsync(Customer customer, Customer newCustomer);
+        Task DeleteCustomerById(int id);
         Task<IEnumerable<Booking>> GetAllCustomerBookingsByIdAsync(int id);
 
     }

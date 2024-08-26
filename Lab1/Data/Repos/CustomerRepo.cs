@@ -12,19 +12,21 @@ namespace Lab1.Data.Repos
         {
             _context = context;
         }
-        public async Task AddCustomer(Customer customer)
+        public async Task AddCustomerAsync(Customer customer)
         {
             await _context.Customer.AddAsync(customer);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCustomer(int id)
+        public async Task DeleteCustomerById(int id)
         {
             var customer = await _context.Customer.FindAsync(id);
             if (customer != null)
             {
                 _context.Customer.Remove(customer);
             }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
@@ -48,15 +50,15 @@ namespace Lab1.Data.Repos
             return customer;
         }
 
-        public async Task UpdateCustomer(Customer customer, Customer newCustomer)
+        public async Task UpdateCustomerAsync(Customer customer, Customer updateCustomer)
         {
             var existingCustomer = await _context.Customer.FindAsync(customer.Id);
 
             if (existingCustomer != null)
             {
-                existingCustomer.FirstName = newCustomer.FirstName;
-                existingCustomer.LastName = newCustomer.LastName;
-                existingCustomer.Email = newCustomer.Email;
+                existingCustomer.FirstName = updateCustomer.FirstName;
+                existingCustomer.LastName = updateCustomer.LastName;
+                existingCustomer.Email = updateCustomer.Email;
             }
 
             await _context.SaveChangesAsync();
