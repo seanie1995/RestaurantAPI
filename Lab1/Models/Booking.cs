@@ -21,15 +21,12 @@ namespace Lab1.Models
         [ForeignKey("Customer")]
         [Required]
         public int FK_CustomerId { get; set; }
-        
-        [ForeignKey("Dish")]
-        public int? FK_DishId { get; set; }
-
+           
         [Required]
         public Customer Customer { get; set; }
         [Required]
         public Table Table { get; set; }
-        public ICollection<Dish> Dishes { get; set; }
+       
 
     }
 }

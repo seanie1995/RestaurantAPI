@@ -25,6 +25,8 @@ namespace Lab1
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
             builder.Services.AddScoped<ICustomerServices, CustomerServices>();
+            builder.Services.AddScoped<ITableRepo, TableRepo>();
+            builder.Services.AddScoped<ITableServices, TableServices>();
 
             var app = builder.Build();
 
