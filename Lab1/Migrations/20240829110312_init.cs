@@ -20,7 +20,7 @@ namespace Lab1.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    FastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -65,9 +65,8 @@ namespace Lab1.Migrations
                     PartySize = table.Column<int>(type: "int", nullable: false),
                     BookingStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BookingEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FK_TableId = table.Column<int>(type: "int", nullable: false),
-                    FK_CustomerId = table.Column<int>(type: "int", nullable: false),
-                    FK_DishId = table.Column<int>(type: "int", nullable: true)
+                    FK_TableId = table.Column<int>(type: "int", nullable: true),
+                    FK_CustomerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,32 +81,7 @@ namespace Lab1.Migrations
                         name: "FK_Booking_Table_FK_TableId",
                         column: x => x.FK_TableId,
                         principalTable: "Table",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookingDish",
-                columns: table => new
-                {
-                    BookingsId = table.Column<int>(type: "int", nullable: false),
-                    DishesId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookingDish", x => new { x.BookingsId, x.DishesId });
-                    table.ForeignKey(
-                        name: "FK_BookingDish_Booking_BookingsId",
-                        column: x => x.BookingsId,
-                        principalTable: "Booking",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BookingDish_Dish_DishesId",
-                        column: x => x.DishesId,
-                        principalTable: "Dish",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -117,7 +91,7 @@ namespace Lab1.Migrations
                 {
                     { 1, true, "Cottage Cheese Pierogi", 89 },
                     { 2, true, "Russian Pierogi", 89 },
-                    { 3, true, "Schabowy", 119 },
+                    { 3, true, "Schabowy Pork Cutlet", 119 },
                     { 4, true, "Sour Rye Soup", 99 },
                     { 5, true, "Bigos", 99 }
                 });
@@ -143,19 +117,11 @@ namespace Lab1.Migrations
                 name: "IX_Booking_FK_TableId",
                 table: "Booking",
                 column: "FK_TableId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookingDish_DishesId",
-                table: "BookingDish",
-                column: "DishesId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "BookingDish");
-
             migrationBuilder.DropTable(
                 name: "Booking");
 

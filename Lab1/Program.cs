@@ -23,10 +23,12 @@ namespace Lab1
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
-            builder.Services.AddScoped<ICustomerServices, CustomerServices>();
+            builder.Services.AddScoped<Data.Repos.IRepos.ICustomerRepo, CustomerRepo>();
+            builder.Services.AddScoped<Services.IServices.ICustomerServices, CustomerServices>();
             builder.Services.AddScoped<ITableRepo, TableRepo>();
             builder.Services.AddScoped<ITableServices, TableServices>();
+            builder.Services.AddScoped<IBookingServices, BookingServices>();
+            builder.Services.AddScoped<IBookingRepo, BookingRepo>();
 
             var app = builder.Build();
 

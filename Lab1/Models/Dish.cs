@@ -15,7 +15,7 @@ namespace Lab1.Models
         [Required]
         public bool Availability { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        
         
     }
 }

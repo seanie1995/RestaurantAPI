@@ -27,7 +27,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("gettablebyid")]
+		[Route("gettablebyid/{id}")]
 		public async Task<ActionResult<Table>> GetTableById(int id)
 		{
 			var table = await _tableServices.GetTableByIdAsync(id);
@@ -35,6 +35,16 @@ namespace Lab1.Controllers
 			return Ok(table);
 		}
 
+
+		[HttpGet]
+		[Route("gettablebookingsbyid")]
+
+		public async Task<ActionResult<Booking>> GetAllTableBookingsById(int id)
+		{
+			var bookingsList = await _tableServices.GetBookingsConnectedToTableByIdAsync(id);
+
+			return Ok(bookingsList);
+		}
 		[HttpPost]
 		[Route("addtable")]
 
@@ -53,7 +63,7 @@ namespace Lab1.Controllers
 			return Ok();
 		}
 
-		[HttpPost]
+		[HttpPut]
 		[Route("updatetable")]
 		public async Task<ActionResult> UpdateTableById(int capacity, int id)
 		{

@@ -54,5 +54,21 @@ namespace Lab1.Data.Repos
 
             await _context.SaveChangesAsync();
         }
-    }
+
+        public async Task<IEnumerable<Booking>> GetCustomerBookingsByCustomerIdAsync(int customerId)
+        {
+            var bookings = await _context.Booking.Where(b => b.FK_CustomerId == customerId).ToListAsync();
+
+            return bookings;
+        }
+
+		public async Task AddTableToBookingByIdAsync(Table table, Booking booking)
+        {
+
+            booking.FK_TableId = table.Id;
+            booking.Table = table;
+
+            await _context.SaveChangesAsync();
+        }
+	}
 }

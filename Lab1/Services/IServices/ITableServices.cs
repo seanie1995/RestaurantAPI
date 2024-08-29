@@ -10,5 +10,7 @@ namespace Lab1.Services.IServices
 		Task DeleteTableByIdAsync(int id);
 
 		Task UpdateTableAsync(int capacity, int id);
+
+		Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId);
 	}
 }

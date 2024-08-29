@@ -15,18 +15,17 @@ namespace Lab1.Models
         public DateTime BookingEnd { get; set; }
 
         [ForeignKey("Table")]
-        [Required]
-        public int FK_TableId { get; set; }
+        public int? FK_TableId { get; set; }
 
         [ForeignKey("Customer")]
         [Required]
         public int FK_CustomerId { get; set; }
-           
-        [Required]
-        public Customer Customer { get; set; }
-        [Required]
-        public Table Table { get; set; }
-       
 
-    }
+		[ForeignKey(nameof(FK_CustomerId))]
+		public virtual Customer Customer { get; set; }
+		
+        [ForeignKey(nameof(FK_TableId))]
+		public virtual Table? Table { get; set; }
+
+	}
 }

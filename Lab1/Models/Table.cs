@@ -9,6 +9,6 @@ namespace Lab1.Models
         [Required]
         public int Capacity { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Booking>? Bookings { get; set; }
     }
 }

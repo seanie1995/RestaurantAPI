@@ -56,15 +56,21 @@ namespace Lab1.Data.Repos
 
 		public async Task<IEnumerable<Table>> FindTableWithEnoughSeatsAsync(int partySize)
 		{
-			return await _context.Table
+			var tableList = await _context.Table
 				.Where(u => u.Capacity >= partySize)
 				.ToListAsync();
+
+			return tableList;
 		}
 
-		public async Task<bool> FindAvailableTableTimeAsync(Booking booking)
+		public async Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId)
 		{
-			return !await _context.Booking
-				.AnyAsync(b => b.FK_TableId == booking.FK_TableId && (booking.BookingStart < b.BookingEnd) && (booking.BookingEnd  > b.BookingStart));
+			var table = await _context.Table.FindAsync(tableId);
+
+			var bookingsList = await _context.Booking.Include(t => t.FK_TableId == tableId).ToListAsync();
+
+			return bookingsList;
 		}
+
 	}
 }

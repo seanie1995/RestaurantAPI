@@ -10,5 +10,9 @@ namespace Lab1.Services.IServices
         Task AddBookingAsync(int customerId,  BookingDTO booking);
         Task UpdateBooking(int id, BookingDTO updateBooking);
         Task DeleteBookingByIdAsync(int id);
-    }
+
+        Task<IEnumerable<Booking>>GetCustomerBookingsByCustomerIdAsync(int customerId);
+
+		Task AddTableToBookingByIdAsync(int tableId, int bookingId);
+	}
 }

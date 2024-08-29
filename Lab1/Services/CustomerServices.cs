@@ -6,11 +6,11 @@ using Lab1.Services.IServices;
 
 namespace Lab1.Services
 {
-    public class CustomerServices : ICustomerServices
+    public class CustomerServices : IServices.ICustomerServices
     {
-        private readonly ICustomerRepo _customerRepo;
+        private readonly Data.Repos.IRepos.ICustomerRepo _customerRepo;
 
-        public CustomerServices(ICustomerRepo customerRepo)
+        public CustomerServices(Data.Repos.IRepos.ICustomerRepo customerRepo)
         {
             _customerRepo = customerRepo;
         }

@@ -63,7 +63,15 @@ namespace Lab1.Data.Repos
 
             await _context.SaveChangesAsync();
 
-
         }
-    }
+
+		public async Task AddBookingToCustomerAsync(Customer customer, Booking booking)
+        {
+			if (customer.Bookings == null)
+			{
+				customer.Bookings = new List<Booking>();
+			}
+			customer.Bookings.Add(booking);
+		}
+	}
 }

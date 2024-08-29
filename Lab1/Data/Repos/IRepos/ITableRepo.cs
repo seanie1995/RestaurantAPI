@@ -9,11 +9,11 @@ namespace Lab1.Data.Repos.IRepos
 		Task AddNewTableAsync(Table table);
 		Task DeleteTableByIdAsync(int id);
 		Task UpdateTableAsync(Table table, int newCapacity);
-
-
 		Task<IEnumerable<Table>> FindTableWithEnoughSeatsAsync(int partySize);
 
-		Task<bool> FindAvailableTableTimeAsync(Booking booking);
+		Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId);
+
+		
 
 
 	}

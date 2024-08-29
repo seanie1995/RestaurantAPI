@@ -1,6 +1,7 @@
 ﻿using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Lab1.Services
 {
@@ -46,6 +47,14 @@ namespace Lab1.Services
 			var existingTable = await _tableRepo.GetTableByIdAsync(id);
 
 			await _tableRepo.UpdateTableAsync(existingTable, capacity);
+
+		}
+
+		public async Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId)
+		{
+			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
+
+			return bookingsList;
 
 		}
 	}

@@ -3,44 +3,36 @@ using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Server.IIS;
 
 namespace Lab1.Services
 {
     public class BookingServices : IBookingServices
     {
-        private readonly IBookingRepo _bookingRepo;
-        private readonly ICustomerRepo _customerRepo;
+        private readonly IBookingRepo _bookingRepo;   
         private readonly ITableRepo _tableRepo;
-        public BookingServices(ITableRepo tableRepo ,IBookingRepo bookingRepo, ICustomerRepo customerRepo)
+        private readonly ICustomerRepo _customerRepo;
+        public BookingServices(ITableRepo tableRepo ,IBookingRepo bookingRepo, ICustomerRepo customerRepo )
         {
             _bookingRepo = bookingRepo;
-            _customerRepo = customerRepo;
             _tableRepo = tableRepo;
+            _customerRepo = customerRepo;
         }
 
         public async Task AddBookingAsync(int customerId, BookingDTO booking)
         {
-            var customer = await _customerRepo.GetCustomerByIdAsync(customerId);
-
-            var tablesWithEnoughSeats = await _tableRepo.FindTableWithEnoughSeatsAsync(booking.PartySize);
-
-			var availableTable = tablesWithEnoughSeats.FirstOrDefault(table =>
-		        !table.Bookings.Any(b =>
-			    (booking.BookingStart < b.BookingEnd) &&
-			    (booking.BookingEnd > b.BookingStart)));
-
-            var newBooking = new Booking
+            var newCustomer = await _customerRepo.GetCustomerByIdAsync(customerId);
+			
+			var newBooking = new Booking
             {
                 BookingStart = booking.BookingStart,
-                BookingEnd = booking.BookingEnd,
-                Customer = customer,
+                BookingEnd = booking.BookingEnd,              
                 PartySize = booking.PartySize,
-                FK_CustomerId = customer.Id,
-                Table = availableTable,
-                FK_TableId = availableTable.Id
-            };
+				FK_CustomerId = newCustomer.Id         
+			};
 
             await _bookingRepo.AddBookingAsync(newBooking);
+           	    		
         }
 
         public async Task DeleteBookingByIdAsync(int id)
@@ -73,5 +65,22 @@ namespace Lab1.Services
             };
             
         }
-    }
+
+        public async Task<IEnumerable<Booking>> GetCustomerBookingsByCustomerIdAsync(int customerId)
+        {
+            var bookings = await _bookingRepo.GetCustomerBookingsByCustomerIdAsync(customerId);
+
+            return bookings;
+        }
+
+        public async Task AddTableToBookingByIdAsync(int tableId, int bookingId)
+        {
+            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
+            var table = await _tableRepo.GetTableByIdAsync(tableId);
+
+
+               
+            await _bookingRepo.AddTableToBookingByIdAsync(table, booking);
+        }
+	}
 }

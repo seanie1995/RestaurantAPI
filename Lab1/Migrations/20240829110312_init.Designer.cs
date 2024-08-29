@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab1.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
-    [Migration("20240827062033_addedBookingDbset")]
-    partial class addedBookingDbset
+    [Migration("20240829110312_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Lab1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BookingDish", b =>
-                {
-                    b.Property<int>("BookingsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DishesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookingsId", "DishesId");
-
-                    b.HasIndex("DishesId");
-
-                    b.ToTable("BookingDish");
-                });
 
             modelBuilder.Entity("Lab1.Models.Booking", b =>
                 {
@@ -57,10 +42,7 @@ namespace Lab1.Migrations
                     b.Property<int>("FK_CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FK_DishId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FK_TableId")
+                    b.Property<int?>("FK_TableId")
                         .HasColumnType("int");
 
                     b.Property<int>("PartySize")
@@ -143,7 +125,7 @@ namespace Lab1.Migrations
                         {
                             Id = 3,
                             Availability = true,
-                            Name = "Schabowy",
+                            Name = "Schabowy Pork Cutlet",
                             Price = 119
                         },
                         new
@@ -205,21 +187,6 @@ namespace Lab1.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookingDish", b =>
-                {
-                    b.HasOne("Lab1.Models.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("BookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lab1.Models.Dish", null)
-                        .WithMany()
-                        .HasForeignKey("DishesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Lab1.Models.Booking", b =>
                 {
                     b.HasOne("Lab1.Models.Customer", "Customer")
@@ -230,9 +197,7 @@ namespace Lab1.Migrations
 
                     b.HasOne("Lab1.Models.Table", "Table")
                         .WithMany("Bookings")
-                        .HasForeignKey("FK_TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FK_TableId");
 
                     b.Navigation("Customer");
 

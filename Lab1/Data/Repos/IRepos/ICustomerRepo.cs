@@ -10,6 +10,8 @@ namespace Lab1.Data.Repos.IRepos
         Task UpdateCustomerAsync(Customer customer, Customer newCustomer);
         Task DeleteCustomerById(int id);
         Task<IEnumerable<Booking>> GetAllCustomerBookingsByIdAsync(int id);
+        Task AddBookingToCustomerAsync(Customer customer, Booking booking);
+
 
     }
 }
