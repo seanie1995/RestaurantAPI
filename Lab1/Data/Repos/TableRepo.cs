@@ -67,8 +67,9 @@ namespace Lab1.Data.Repos
 		{
 			var table = await _context.Table.FindAsync(tableId);
 
-			var bookingsList = await _context.Booking.Include(t => t.FK_TableId == tableId).ToListAsync();
-
+			var bookingsList = await _context.Booking
+								 .Where(b => b.FK_TableId == tableId)
+								 .ToListAsync();
 			return bookingsList;
 		}
 

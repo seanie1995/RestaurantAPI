@@ -1,4 +1,5 @@
 ﻿using Lab1.Models;
+using Lab1.Models.ViewModels;
 using Lab1.Services;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,7 @@ namespace Lab1.Controllers
 		[HttpGet]
 		[Route("gettablebookingsbyid")]
 
-		public async Task<ActionResult<Booking>> GetAllTableBookingsById(int id)
+		public async Task<ActionResult<BookingViewModel>> GetAllTableBookingsByTableId(int id)
 		{
 			var bookingsList = await _tableServices.GetBookingsConnectedToTableByIdAsync(id);
 

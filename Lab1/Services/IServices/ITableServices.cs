@@ -1,4 +1,5 @@
 ﻿using Lab1.Models;
+using Lab1.Models.ViewModels;
 
 namespace Lab1.Services.IServices
 {
@@ -11,6 +12,6 @@ namespace Lab1.Services.IServices
 
 		Task UpdateTableAsync(int capacity, int id);
 
-		Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId);
+		Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
+using Lab1.Models.ViewModels;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -50,11 +51,20 @@ namespace Lab1.Services
 
 		}
 
-		public async Task<IEnumerable<Booking>> GetBookingsConnectedToTableByIdAsync(int tableId)
+		public async Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId)
 		{
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
 
-			return bookingsList;
+			var bookingViewModelList = bookingsList.Select(b => new BookingViewModel
+			{
+				Id = b.Id,
+				BookingStart = b.BookingStart,
+				BookingEnd = b.BookingEnd,
+				CustomerId = b.FK_CustomerId
+				
+			}).ToList();
+
+			return bookingViewModelList;
 
 		}
 	}
