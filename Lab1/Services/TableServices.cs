@@ -27,6 +27,12 @@ namespace Lab1.Services
 		public async Task DeleteTableByIdAsync(int id)
 		{
 			var tableToDelete = await _tableRepo.GetTableByIdAsync(id);
+
+			if (tableToDelete == null)
+			{
+				throw new Exception($"Table with ID: {id} not found");
+			}
+
 			await _tableRepo.DeleteTableByIdAsync(id);
 		}
 
@@ -40,6 +46,12 @@ namespace Lab1.Services
 		public async Task<Table> GetTableByIdAsync(int id)
 		{
 			var table = await _tableRepo.GetTableByIdAsync(id);
+
+			if (table == null)
+			{
+				throw new Exception($"Table with ID: {id} not found");
+			}
+
 			return table;
 		}
 
@@ -47,12 +59,24 @@ namespace Lab1.Services
 		{
 			var existingTable = await _tableRepo.GetTableByIdAsync(id);
 
+			if (existingTable == null) 
+			{
+				throw new Exception($"Table with ID: {id} not found.");
+			}
+
 			await _tableRepo.UpdateTableAsync(existingTable, capacity);
 
 		}
 
 		public async Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId)
 		{
+			var existingTable = await _tableRepo.GetTableByIdAsync(tableId);
+
+			if (existingTable == null)
+			{
+				throw new Exception($"Table with ID: {tableId} not found");
+			}
+
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
 
 			var bookingViewModelList = bookingsList.Select(b => new BookingViewModel

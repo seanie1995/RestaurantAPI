@@ -21,27 +21,34 @@ namespace Lab1.Services
             _customerRepo = customerRepo;
         }
 
-        public async Task AddBookingAsync(int customerId, BookingDTO booking)
+		// Method below takes a customerId and a bookingDTO. Customer is found and it's Id is automatically added to new booking
+		public async Task AddBookingAsync(int customerId, BookingDTO booking) 
         {
             var newCustomer = await _customerRepo.GetCustomerByIdAsync(customerId);
-			
-			var newBooking = new Booking
+		    
+            if (newCustomer == null)
+            {
+                throw new Exception("Customer input is null");
+            }
+
+            var newBooking = new Booking
             {
                 BookingStart = booking.BookingStart,
-                BookingEnd = booking.BookingEnd,              
+                BookingEnd = booking.BookingEnd,
                 PartySize = booking.PartySize,
-				FK_CustomerId = newCustomer.Id         
-			};
+                FK_CustomerId = newCustomer.Id,
+            };
 
             await _bookingRepo.AddBookingAsync(newBooking);
            	    		
         }
-
+        // Method below takes a booking ID, finds the booking with ID and deletes it. 
         public async Task DeleteBookingByIdAsync(int id)
-        {
+        {          
             await _bookingRepo.DeleteBookingByIdAsync(id);
         }
 
+        // Method below returns a list of BookingViewModels
         public async Task<IEnumerable<BookingViewModel>> GetAllBookingsAsync()
         {
             var bookingList = await _bookingRepo.GetAllBookingsAsync();
@@ -58,10 +65,15 @@ namespace Lab1.Services
 
             return bookingListViewModels;
         }
-
+        // Method below takes a booking ID and returns booking with corresponding ID.
         public async Task<BookingViewModel> GetBookingByIdAsync(int id)
         {
             var booking = await _bookingRepo.GetBookingByIdAsync(id);
+
+            if (booking == null)
+            {
+                throw new Exception($"Booking with ID: {id} not found");
+            }
 
             var bookingViewModel = new BookingViewModel
             {
@@ -126,9 +138,7 @@ namespace Lab1.Services
         {
             var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
             var table = await _tableRepo.GetTableByIdAsync(tableId);
-
             
-    
             if (!await CheckIfTableIsAvailableAsync(tableId, bookingId))
             {
                 throw new Exception($"Table unavailable at this time slot");
@@ -164,10 +174,12 @@ namespace Lab1.Services
 				}
 
 				// Check for overlap
-				if (booking.BookingStart < bookingToCheck.BookingEnd && booking.BookingEnd > bookingToCheck.BookingStart)
+				if ((booking.BookingStart == bookingToCheck.BookingStart && booking.BookingEnd == bookingToCheck.BookingEnd) ||
+	                (booking.BookingStart <= bookingToCheck.BookingEnd && booking.BookingEnd >= bookingToCheck.BookingStart))
 				{
 					return false;
 				}
+
 			}
 			return true;
 		}
