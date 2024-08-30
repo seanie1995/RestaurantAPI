@@ -28,21 +28,21 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("gettablebyid/{id}")]
-		public async Task<ActionResult<Table>> GetTableById(int id)
+		[Route("gettablebyid/{tableId}")]
+		public async Task<ActionResult<Table>> GetTableById(int tableId)
 		{
-			var table = await _tableServices.GetTableByIdAsync(id);
+			var table = await _tableServices.GetTableByIdAsync(tableId);
 
 			return Ok(table);
 		}
 
 
 		[HttpGet]
-		[Route("gettablebookingsbyid")]
+		[Route("gettablebookingsbyid/{tableId}")]
 
-		public async Task<ActionResult<BookingViewModel>> GetAllTableBookingsByTableId(int id)
+		public async Task<ActionResult<BookingViewModel>> GetAllTableBookingsByTableId(int tableId)
 		{
-			var bookingsList = await _tableServices.GetBookingsConnectedToTableByIdAsync(id);
+			var bookingsList = await _tableServices.GetBookingsConnectedToTableByIdAsync(tableId);
 
 			return Ok(bookingsList);
 		}
@@ -58,17 +58,17 @@ namespace Lab1.Controllers
 		[HttpDelete]
 		[Route("deletetable")]
 
-		public async Task<ActionResult> DeleteTableById(int id)
+		public async Task<ActionResult> DeleteTableById(int tableId)
 		{
-			await _tableServices.DeleteTableByIdAsync(id);
+			await _tableServices.DeleteTableByIdAsync(tableId);
 			return Ok();
 		}
 
-		[HttpPut]
+		[HttpPatch]
 		[Route("updatetable")]
-		public async Task<ActionResult> UpdateTableById(int capacity, int id)
+		public async Task<ActionResult> UpdateTableById(int newCapacity, int tableId)
 		{
-			await _tableServices.UpdateTableAsync(capacity, id);
+			await _tableServices.UpdateTableAsync(newCapacity, tableId);
 			return Ok();
 		}
 

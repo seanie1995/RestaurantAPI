@@ -60,12 +60,15 @@ namespace Lab1.Services
 				Id = b.Id,
 				BookingStart = b.BookingStart,
 				BookingEnd = b.BookingEnd,
-				CustomerId = b.FK_CustomerId
+				CustomerId = b.FK_CustomerId,
+				PartySize = b.PartySize,
+				TableId = b.FK_TableId
 				
 			}).ToList();
 
 			return bookingViewModelList;
-
 		}
+
+		
 	}
 }

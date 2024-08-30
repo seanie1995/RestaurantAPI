@@ -13,11 +13,8 @@ namespace Lab1.Models
             [Required]
             [StringLength(50)]
             public string LastName { get; set; }
-
             [Required]
             public string Email { get; set; }
-
-        
             public virtual ICollection<Booking>? Bookings { get; set; }
 
         }

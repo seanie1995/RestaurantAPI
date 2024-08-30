@@ -30,10 +30,10 @@ namespace Lab1.Api.Controllers
 
 		// GET: api/booking/{id}
 		[HttpGet]
-		[Route("getbookingbyid/{id}")]
-		public async Task<ActionResult<Booking>> GetBookingById(int id)
+		[Route("getbookingbyid/{bookingId}")]
+		public async Task<ActionResult<Booking>> GetBookingById(int bookingId)
 		{
-			var booking = await _bookingServices.GetBookingByIdAsync(id);
+			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
 			if (booking == null)
 			{
 				return NotFound();
@@ -42,11 +42,11 @@ namespace Lab1.Api.Controllers
 		}
 
 		[HttpGet]
-		[Route("getcustomerbookingsbyid/{id}")]
+		[Route("getcustomerbookingsbyid/{customerId}")]
 
-		public async Task<ActionResult<IEnumerable<Booking>>> GetCustomerBookingsByCustomerId(int id)
+		public async Task<ActionResult<IEnumerable<Booking>>> GetCustomerBookingsByCustomerId(int customerId)
 		{
-			var bookingList = await _bookingServices.GetCustomerBookingsByCustomerIdAsync(id);
+			var bookingList = await _bookingServices.GetCustomerBookingsByCustomerIdAsync(customerId);
 			if (bookingList == null)
 			{
 				return NotFound();
@@ -66,21 +66,21 @@ namespace Lab1.Api.Controllers
 		}
 
 		// PUT: api/booking/{id}
-		[HttpPut]
+		[HttpPatch]
 		[Route("updatebookingbyid")]
-		public async Task<ActionResult> UpdateBooking(int id, [FromBody] BookingDTO updateBookingDto)
+		public async Task<ActionResult> UpdateBooking(int existingBookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
-			var booking = await _bookingServices.GetBookingByIdAsync(id);
+			var booking = await _bookingServices.GetBookingByIdAsync(existingBookingId);
 			if (booking == null)
 			{
 				return NotFound();
 			}
 
-			await _bookingServices.UpdateBooking(id, updateBookingDto);
+			await _bookingServices.UpdateBookingAsync(existingBookingId, updatedBookingDto);
 			return NoContent();
 		}
 
-		[HttpPut]
+		[HttpPatch]
 		[Route("addtabletobooking")]
 		public async Task<ActionResult> AddTableToBooking(int tableId, int bookingId)
 		{
@@ -92,15 +92,15 @@ namespace Lab1.Api.Controllers
 		// DELETE: api/booking/{id}
 		[HttpDelete]
 		[Route("deletebookingbyid")]
-		public async Task<ActionResult> DeleteBooking(int id)
+		public async Task<ActionResult> DeleteBooking(int bookingId)
 		{
-			var booking = await _bookingServices.GetBookingByIdAsync(id);
+			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
 			if (booking == null)
 			{
 				return NotFound();
 			}
 
-			await _bookingServices.DeleteBookingByIdAsync(id);
+			await _bookingServices.DeleteBookingByIdAsync(bookingId);
 			return NoContent();
 		}
 	}

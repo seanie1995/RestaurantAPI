@@ -1,5 +1,6 @@
 ﻿using Lab1.Models;
 using Lab1.Models.DTOs;
+using Lab1.Models.ViewModels;
 using Lab1.Services;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Http;
@@ -21,17 +22,17 @@ namespace Lab1.Controllers
 
         [HttpGet]
         [Route("getallcustomers")]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetAllCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerViewModel>>> GetAllCustomers()
         {
             var customerList = await _services.GetAllCustomersAsync();
             return Ok(customerList);
         }
 
         [HttpGet]
-        [Route("customer/{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(int id)
+        [Route("customer/{customerId}")]
+        public async Task<ActionResult<CustomerViewModel>> GetCustomerById(int customerId)
         {
-            var customer = await _services.GetCustomerByIdAsync(id);
+            var customer = await _services.GetCustomerByIdAsync(customerId);
 
             return customer;
         }
@@ -46,10 +47,10 @@ namespace Lab1.Controllers
 
         [HttpPatch]
         [Route("updatecustomerinfo")]
-        public async Task<ActionResult> UpdateCustomer(int id, CustomerDTO customer)
+        public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
         {
            
-            await _services.UpdateCustomerAsync(id, customer);
+            await _services.UpdateCustomerAsync(customerId, customer);
             return Ok("Customer information updated");
         }
 

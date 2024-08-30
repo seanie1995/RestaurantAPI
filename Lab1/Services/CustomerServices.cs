@@ -2,11 +2,12 @@
 using Lab1.Exceptions;
 using Lab1.Models;
 using Lab1.Models.DTOs;
+using Lab1.Models.ViewModels;
 using Lab1.Services.IServices;
 
 namespace Lab1.Services
 {
-    public class CustomerServices : IServices.ICustomerServices
+    public class CustomerServices : ICustomerServices
     {
         private readonly Data.Repos.IRepos.ICustomerRepo _customerRepo;
 
@@ -57,26 +58,36 @@ namespace Lab1.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+        public async Task<IEnumerable<CustomerViewModel>> GetAllCustomersAsync()
         {
             var customerList = await _customerRepo.GetAllCustomersAsync();
 
-            return customerList.Select(u => new Customer
+            var customerViewModelList = customerList.Select(c => new CustomerViewModel
             {
-                Id = u.Id,
-                LastName = u.LastName,
-                FirstName = u.FirstName,
-                Email = u.Email
-            }); 
+                Id = c.Id,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                Email = c.Email,
+            }).ToList();
+
+            return customerViewModelList;
         }
 
-        public async Task<Customer> GetCustomerByIdAsync(int id)
+        public async Task<CustomerViewModel> GetCustomerByIdAsync(int id)
         {
             var customer = await _customerRepo.GetCustomerByIdAsync(id);
 
-            if (customer != null)
+            var customerViewModel = new CustomerViewModel
             {
-                return customer;
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName= customer.LastName,
+                Email = customer.Email
+            };
+
+            if (customerViewModel != null)
+            {
+                return customerViewModel;
             }
             else
             {

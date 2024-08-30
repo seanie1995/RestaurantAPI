@@ -9,9 +9,9 @@ namespace Lab1.Services.IServices
 		Task<Table> GetTableByIdAsync(int id);
 		Task AddNewTableAsync(int capacity);
 		Task DeleteTableByIdAsync(int id);
-
 		Task UpdateTableAsync(int capacity, int id);
-
 		Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId);
+
+		
 	}
 }

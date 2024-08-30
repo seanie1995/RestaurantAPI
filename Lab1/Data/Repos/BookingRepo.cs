@@ -42,12 +42,13 @@ namespace Lab1.Data.Repos
             return booking;
         }
 
-        public async Task UpdateBooking(Booking booking, Booking updateBooking)
+        public async Task UpdateBookingAsync(Booking booking, Booking updateBooking)
         {
             var existingBooking = await _context.Booking.FindAsync(booking.Id);
 
             if (existingBooking != null)
             {
+                existingBooking.PartySize = updateBooking.PartySize;
                 existingBooking.BookingStart = updateBooking.BookingStart;
                 existingBooking.BookingEnd = updateBooking.BookingEnd;
             }
