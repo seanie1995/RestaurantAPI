@@ -25,7 +25,7 @@ namespace Lab1.Models
 		public virtual Customer Customer { get; set; }
 		
         [ForeignKey(nameof(FK_TableId))]
-		public virtual Table? Table { get; set; }
+		public virtual Table Table { get; set; }
 
 	}
 }

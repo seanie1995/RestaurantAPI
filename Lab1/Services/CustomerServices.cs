@@ -73,9 +73,14 @@ namespace Lab1.Services
             return customerViewModelList;
         }
 
-        public async Task<CustomerViewModel> GetCustomerByIdAsync(int id)
+        public async Task<CustomerViewModel> GetCustomerByIdAsync(int id) 
         {
             var customer = await _customerRepo.GetCustomerByIdAsync(id);
+
+            if (customer == null)
+            {
+                throw new Exception($"Customer with ID: {id} not found.");
+            }
 
             var customerViewModel = new CustomerViewModel
             {
@@ -85,20 +90,17 @@ namespace Lab1.Services
                 Email = customer.Email
             };
 
-            if (customerViewModel != null)
-            {
-                return customerViewModel;
-            }
-            else
-            {
-                throw new NotFoundException($"Customer with {id} not found.");   
-            }
-
+            return customerViewModel;
         }
 
         public async Task UpdateCustomerAsync(int id, CustomerDTO newCustomer)
         {
             var customerToUpdate = await _customerRepo.GetCustomerByIdAsync(id);
+
+            if (customerToUpdate == null)
+            {
+				throw new Exception($"Customer with ID: {id} not found.");
+			}
 
             var updatedCustomer = new Customer
             {
@@ -107,7 +109,12 @@ namespace Lab1.Services
                 Email = newCustomer.Email
             };
 
-            await _customerRepo.UpdateCustomerAsync(customerToUpdate, updatedCustomer);
+			if (string.IsNullOrWhiteSpace(newCustomer.LastName) || string.IsNullOrWhiteSpace(newCustomer.Email))
+			{
+				throw new ArgumentException("Last Name and Email cannot be blank.", nameof(newCustomer.LastName));
+			}
+
+			await _customerRepo.UpdateCustomerAsync(customerToUpdate, updatedCustomer);
         }
     }
 }

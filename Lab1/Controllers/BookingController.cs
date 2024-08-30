@@ -3,6 +3,7 @@ using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,6 +34,11 @@ namespace Lab1.Api.Controllers
 		[Route("getbookingbyid/{bookingId}")]
 		public async Task<ActionResult<Booking>> GetBookingById(int bookingId)
 		{
+			if (bookingId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
 			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
 			if (booking == null)
 			{
@@ -46,6 +52,11 @@ namespace Lab1.Api.Controllers
 
 		public async Task<ActionResult<IEnumerable<Booking>>> GetCustomerBookingsByCustomerId(int customerId)
 		{
+			if (customerId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
 			var bookingList = await _bookingServices.GetCustomerBookingsByCustomerIdAsync(customerId);
 			if (bookingList == null)
 			{
@@ -61,6 +72,11 @@ namespace Lab1.Api.Controllers
 		[Route("addbooking")]
 		public async Task<ActionResult> AddBooking([FromBody] BookingDTO bookingDto, int customerId)
 		{
+			if (customerId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
 			await _bookingServices.AddBookingAsync(customerId, bookingDto);
 			return Ok();
 		}
@@ -70,6 +86,11 @@ namespace Lab1.Api.Controllers
 		[Route("updatebookingbyid")]
 		public async Task<ActionResult> UpdateBooking(int existingBookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
+			if (existingBookingId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
 			var booking = await _bookingServices.GetBookingByIdAsync(existingBookingId);
 			if (booking == null)
 			{
@@ -84,6 +105,11 @@ namespace Lab1.Api.Controllers
 		[Route("addtabletobooking")]
 		public async Task<ActionResult> AddTableToBooking(int tableId, int bookingId)
 		{
+			if (tableId == null || bookingId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
 			await _bookingServices.AddTableToBookingByIdAsync(tableId, bookingId);
 
 			return Ok();
@@ -91,13 +117,12 @@ namespace Lab1.Api.Controllers
 
 		// DELETE: api/booking/{id}
 		[HttpDelete]
-		[Route("deletebookingbyid")]
+		[Route("deletebookingbyid/{bookingId}")]
 		public async Task<ActionResult> DeleteBooking(int bookingId)
 		{
-			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
-			if (booking == null)
+			if (bookingId == null || bookingId == 0)
 			{
-				return NotFound();
+				return BadRequest("Input cannot be null");
 			}
 
 			await _bookingServices.DeleteBookingByIdAsync(bookingId);

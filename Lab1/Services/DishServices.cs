@@ -29,6 +29,11 @@ namespace Lab1.Services
 		{
 			var Dish = await _dishRepo.GetDishByIdAsync(id);
 
+			if (Dish == null)
+			{
+				throw new Exception($"Dish with ID: {id} not found");
+			}
+
 			await _dishRepo.DeleteDishAsync(id);
 		}
 
@@ -43,12 +48,22 @@ namespace Lab1.Services
 		{
 			var Dish = await _dishRepo.GetDishByIdAsync(id);
 
+			if (Dish == null)
+			{
+				throw new Exception($"Dish with ID: {id} not found");
+			}
+
 			return Dish;
 		}
 
 		public async Task UpdateDishAsync(int dishId, DishDTO updatedDIsh)
 		{
 			var existingDish = await _dishRepo.GetDishByIdAsync(dishId);
+
+			if (existingDish == null)
+			{
+				throw new Exception($"Dish with ID: {dishId} not found");
+			}
 
 			var newDish = new Dish
 			{
