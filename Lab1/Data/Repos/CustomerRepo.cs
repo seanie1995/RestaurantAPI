@@ -50,9 +50,9 @@ namespace Lab1.Data.Repos
             return customer;
         }
 
-        public async Task UpdateCustomerAsync(Customer customer, Customer updateCustomer)
+        public async Task UpdateCustomerAsync(Customer existingCustomer, Customer updateCustomer)
         {
-            var existingCustomer = await _context.Customer.FindAsync(customer.Id);
+            //var existingCustomer = await _context.Customer.FindAsync(customer.Id);
 
             if (existingCustomer != null)
             {

@@ -29,8 +29,10 @@ namespace Lab1
             builder.Services.AddScoped<ITableServices, TableServices>();
             builder.Services.AddScoped<IBookingServices, BookingServices>();
             builder.Services.AddScoped<IBookingRepo, BookingRepo>();
+			builder.Services.AddScoped<IDishServices, DishServices>();
+			builder.Services.AddScoped<IDishRepo, DishRepo>();
 
-            var app = builder.Build();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
