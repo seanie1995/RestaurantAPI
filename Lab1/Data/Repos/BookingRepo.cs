@@ -63,7 +63,7 @@ namespace Lab1.Data.Repos
             return bookings;
         }
 
-		public async Task AddTableToBookingByIdAsync(Table table, Booking booking)
+		public async Task UpdateBookingTableAsync(Table table, Booking booking)
         {
 
             booking.FK_TableId = table.Id;

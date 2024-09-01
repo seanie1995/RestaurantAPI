@@ -148,7 +148,7 @@ namespace Lab1.Services
             return bookingsViewModels;
         }
 
-        public async Task AddTableToBookingByIdAsync(int tableId, int bookingId)
+        public async Task UpdateBookingTableAsync(int tableId, int bookingId)
         {
             var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
             var table = await _tableRepo.GetTableByIdAsync(tableId);
@@ -165,7 +165,7 @@ namespace Lab1.Services
             
             else
             {
-				await _bookingRepo.AddTableToBookingByIdAsync(table, booking);
+				await _bookingRepo.UpdateBookingTableAsync(table, booking);
 			}        
         }
 

@@ -102,15 +102,15 @@ namespace Lab1.Api.Controllers
 		}
 
 		[HttpPatch]
-		[Route("addtabletobooking")]
-		public async Task<ActionResult> AddTableToBooking(int tableId, int bookingId)
+		[Route("updatebookingtable")]
+		public async Task<ActionResult> UpdateBookingTable(int tableId, int bookingId)
 		{
 			if (tableId == null || bookingId == null)
 			{
 				return BadRequest("Input cannot be null");
 			}
 
-			await _bookingServices.AddTableToBookingByIdAsync(tableId, bookingId);
+			await _bookingServices.UpdateBookingTableAsync(tableId, bookingId);
 
 			return Ok();
 		}
