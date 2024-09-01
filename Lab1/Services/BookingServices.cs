@@ -37,6 +37,7 @@ namespace Lab1.Services
                 BookingEnd = booking.BookingEnd,
                 PartySize = booking.PartySize,
                 FK_CustomerId = newCustomer.Id,
+                
             };
 
             await _bookingRepo.AddBookingAsync(newBooking);
