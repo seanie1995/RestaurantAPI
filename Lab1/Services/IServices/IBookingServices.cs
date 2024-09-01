@@ -13,7 +13,7 @@ namespace Lab1.Services.IServices
         Task DeleteBookingByIdAsync(int id);
         Task<IEnumerable<BookingViewModel>>GetCustomerBookingsByCustomerIdAsync(int customerId);
 		Task AddTableToBookingByIdAsync(int tableId, int bookingId);
-        Task<bool> CheckIfTableIsAvailableAsync(int tableId, int bookingId);
+        Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd);
         Task<bool> CheckIfTableHasEnoughSeatsAsync(int tableId, int partySize);
 	}
 }

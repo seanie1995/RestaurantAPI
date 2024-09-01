@@ -10,5 +10,7 @@ namespace Lab1.Models.DTOs
         
         public DateTime BookingEnd { get; set; }
 
+        public int TableId { get; set; }
+
     }
 }

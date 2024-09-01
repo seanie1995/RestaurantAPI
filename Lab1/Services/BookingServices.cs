@@ -31,12 +31,25 @@ namespace Lab1.Services
                 throw new Exception("Customer input is null");
             }
 
-            var newBooking = new Booking
+			var hasSeats = await CheckIfTableHasEnoughSeatsAsync(booking.TableId, booking.PartySize);
+			var hasAvailableTime = await CheckIfTableIsAvailableAsync(booking.TableId, booking.BookingStart, booking.BookingEnd);
+
+			if (!hasSeats)
+			{
+				throw new Exception("Table does not have enough seats");
+			}
+			if (!hasAvailableTime)
+			{
+				throw new Exception("Table is already booked for this time slot");
+			}
+
+			var newBooking = new Booking
             {
                 BookingStart = booking.BookingStart,
                 BookingEnd = booking.BookingEnd,
                 PartySize = booking.PartySize,
                 FK_CustomerId = newCustomer.Id,
+                FK_TableId = booking.TableId
                 
             };
 
@@ -94,16 +107,9 @@ namespace Lab1.Services
             var bookingToUpdate = await _bookingRepo.GetBookingByIdAsync(existingBookingId);
 
             var tableToCheck = await _tableRepo.GetTableByIdAsync(bookingToUpdate.FK_TableId.Value);
-
-            var newBooking = new Booking
-            {
-                PartySize = updatedBooking.PartySize,
-                BookingStart = updatedBooking.BookingStart,
-                BookingEnd = updatedBooking.BookingEnd,
-            };
-
+           
 			var hasSeats = await CheckIfTableHasEnoughSeatsAsync(tableToCheck.Id, updatedBooking.PartySize);
-            var hasAvailableTime = await CheckIfTableIsAvailableAsync(tableToCheck.Id, bookingToUpdate.Id);
+            var hasAvailableTime = await CheckIfTableIsAvailableAsync(tableToCheck.Id, updatedBooking.BookingStart, updatedBooking.BookingEnd);
 
             if (!hasSeats)
             {
@@ -114,7 +120,14 @@ namespace Lab1.Services
                 throw new Exception("Table is already booked for this time slot");
             }
 
-            await _bookingRepo.UpdateBookingAsync(bookingToUpdate, newBooking);
+			var newBooking = new Booking
+			{
+				PartySize = updatedBooking.PartySize,
+				BookingStart = updatedBooking.BookingStart,
+				BookingEnd = updatedBooking.BookingEnd,
+			};
+
+			await _bookingRepo.UpdateBookingAsync(bookingToUpdate, newBooking);
             
         }
 
@@ -140,7 +153,7 @@ namespace Lab1.Services
             var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
             var table = await _tableRepo.GetTableByIdAsync(tableId);
             
-            if (!await CheckIfTableIsAvailableAsync(tableId, bookingId))
+            if (!await CheckIfTableIsAvailableAsync(tableId, booking.BookingStart, booking.BookingEnd))
             {
                 throw new Exception($"Table unavailable at this time slot");
             }
@@ -156,12 +169,11 @@ namespace Lab1.Services
 			}        
         }
 
-		public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, int bookingId)
+		public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd)
 		{
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
-			var bookingToCheck = await _bookingRepo.GetBookingByIdAsync(bookingId);
-
-			if (bookingsList == null || bookingToCheck == null)
+			
+			if (bookingsList == null)
 			{
 				throw new Exception("Booking or booking list not found");
 			}
@@ -169,14 +181,10 @@ namespace Lab1.Services
 			foreach (var booking in bookingsList)
 			{
 				// Ignore the current booking being updated
-				if (booking.Id == bookingId)
-				{
-					continue;
-				}
-
+			
 				// Check for overlap
-				if ((booking.BookingStart == bookingToCheck.BookingStart && booking.BookingEnd == bookingToCheck.BookingEnd) ||
-	                (booking.BookingStart <= bookingToCheck.BookingEnd && booking.BookingEnd >= bookingToCheck.BookingStart))
+				if ((booking.BookingStart == bookingStart && booking.BookingEnd == bookingEnd) ||
+	                (booking.BookingStart <= bookingEnd && booking.BookingEnd >= bookingStart))
 				{
 					return false;
 				}
@@ -184,7 +192,6 @@ namespace Lab1.Services
 			}
 			return true;
 		}
-
 
 		public async Task<bool> CheckIfTableHasEnoughSeatsAsync(int tableId, int partySize)
         {
