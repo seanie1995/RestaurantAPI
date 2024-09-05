@@ -22,7 +22,7 @@ namespace Lab1.Api.Controllers
 
 		// GET: api/booking
 		[HttpGet]
-		[Route("getallbookings")]
+		[Route("getAllBookings")]
 		public async Task<ActionResult<IEnumerable<Booking>>> GetAllBookings()
 		{
 			var bookings = await _bookingServices.GetAllBookingsAsync();
@@ -31,7 +31,7 @@ namespace Lab1.Api.Controllers
 
 		// GET: api/booking/{id}
 		[HttpGet]
-		[Route("getbookingbyid/{bookingId}")]
+		[Route("getBookingById/{bookingId}")]
 		public async Task<ActionResult<Booking>> GetBookingById(int bookingId)
 		{
 			if (bookingId == null)
@@ -48,7 +48,7 @@ namespace Lab1.Api.Controllers
 		}
 
 		[HttpGet]
-		[Route("getcustomerbookingsbyid/{customerId}")]
+		[Route("getCustomerBookingsByCustomerId/{customerId}")]
 
 		public async Task<ActionResult<IEnumerable<Booking>>> GetCustomerBookingsByCustomerId(int customerId)
 		{
@@ -69,7 +69,7 @@ namespace Lab1.Api.Controllers
 
 		// POST: api/booking
 		[HttpPost]
-		[Route("addbooking")]
+		[Route("addBooking")]
 		public async Task<ActionResult> AddBooking([FromBody] BookingDTO bookingDto, int customerId)
 		{
 			if (customerId == null)
@@ -83,26 +83,26 @@ namespace Lab1.Api.Controllers
 
 		// PUT: api/booking/{id}
 		[HttpPatch]
-		[Route("updatebookingbyid")]
-		public async Task<ActionResult> UpdateBooking(int existingBookingId, [FromBody] BookingDTO updatedBookingDto)
+		[Route("updateBookingById/{bookingId}")]
+		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
-			if (existingBookingId == null)
+			if (bookingId == null)
 			{
 				return BadRequest("Input cannot be null");
 			}
 
-			var booking = await _bookingServices.GetBookingByIdAsync(existingBookingId);
+			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
 			if (booking == null)
 			{
 				return NotFound();
 			}
 
-			await _bookingServices.UpdateBookingAsync(existingBookingId, updatedBookingDto);
+			await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
 			return NoContent();
 		}
 
 		[HttpPatch]
-		[Route("updatebookingtable")]
+		[Route("updateBookingTable/{tableId}")]
 		public async Task<ActionResult> UpdateBookingTable(int tableId, int bookingId)
 		{
 			if (tableId == null || bookingId == null)
@@ -115,9 +115,37 @@ namespace Lab1.Api.Controllers
 			return Ok();
 		}
 
+		[HttpPatch]
+		[Route("updateBookingPartySize/{bookingId}")]
+		public async Task<ActionResult> UpdateBookingPartySize(int bookingId, int partySize)
+		{
+			if (bookingId == null || partySize == 0)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
+			await _bookingServices.UpdateBookingPartySizeAsync(bookingId, partySize);
+
+			return Ok();
+		}
+
+		[HttpPatch]
+		[Route("updateBookingTime/{bookingId}")]
+		public async Task<ActionResult> UpdateBookingTime(int bookingId, DateTime bookingStart, DateTime bookingEnd)
+		{
+			if (bookingId == null || bookingStart == null || bookingEnd == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
+			await _bookingServices.UpdateBookingTimeAsync(bookingId, bookingStart, bookingEnd);
+
+			return Ok();
+		}
+
 		// DELETE: api/booking/{id}
 		[HttpDelete]
-		[Route("deletebookingbyid/{bookingId}")]
+		[Route("deleteBookingById/{bookingId}")]
 		public async Task<ActionResult> DeleteBooking(int bookingId)
 		{
 			if (bookingId == null || bookingId == 0)

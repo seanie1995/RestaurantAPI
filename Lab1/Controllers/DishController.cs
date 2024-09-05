@@ -18,7 +18,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("getalldishes")]
+		[Route("getAllDishes")]
 
 		public async Task<ActionResult<IEnumerable<Dish>>> GetAllDishes()
 		{
@@ -28,7 +28,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("getdishbyid/{dishId}")]
+		[Route("getDishById/{dishId}")]
 
 		public async Task<ActionResult<Dish>> GetDishById(int dishId)
 		{
@@ -38,7 +38,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpPost]
-		[Route("addnewdish")]
+		[Route("addNewDish")]
 		public async Task<ActionResult> AddDish(DishDTO dish)
 		{
 			await _dishServices.AddDishAsync(dish);
@@ -47,7 +47,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpDelete]
-		[Route("deletedishbyid")]
+		[Route("deleteDishById")]
 		public async Task<ActionResult> DeleteDish(int dishId)
 		{
 			await _dishServices.DeleteDishAsync(dishId);
@@ -55,11 +55,11 @@ namespace Lab1.Controllers
 		}
 
 		[HttpPatch]
-		[Route("updatedish")]
+		[Route("updateDish/{dishId}")]
 
-		public async Task<ActionResult> UpdateDish(int dishToUpdate, DishDTO newDish)
+		public async Task<ActionResult> UpdateDish(int dishId, DishDTO newDish)
 		{
-			await _dishServices.UpdateDishAsync(dishToUpdate, newDish);
+			await _dishServices.UpdateDishAsync(dishId, newDish);
 			return Ok();
 		}
 	}

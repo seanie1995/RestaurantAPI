@@ -169,7 +169,35 @@ namespace Lab1.Services
 			}        
         }
 
-		public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd)
+        public async Task UpdateBookingTimeAsync(int bookingId, DateTime bookingStart, DateTime bookendEnd)
+        {
+            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
+
+            if (!await CheckIfTableIsAvailableAsync(booking.Table.Id, bookingStart, bookendEnd))
+            {
+                throw new Exception("Time slot not available");
+            }
+
+            await _bookingRepo.UpdateBookingTimeAsync(booking, bookingStart, bookendEnd);
+        }
+
+        public async Task UpdateBookingPartySizeAsync(int bookingId, int partySize)
+        {
+           
+            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
+
+            var tableId = booking.Table.Id;
+
+            if(!await CheckIfTableHasEnoughSeatsAsync(tableId, partySize))
+            {
+                throw new Exception("Table does not have enough seats.");
+            }
+
+            await _bookingRepo.UpdateBookingPartySizeAsync(partySize, booking);
+        }
+
+
+        public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd)
 		{
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
 			

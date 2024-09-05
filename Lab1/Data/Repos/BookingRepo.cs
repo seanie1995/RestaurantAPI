@@ -71,5 +71,20 @@ namespace Lab1.Data.Repos
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateBookingPartySizeAsync(int partySize,Booking booking)
+        {
+            booking.PartySize = partySize;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateBookingTimeAsync(Booking booking, DateTime bookingStart, DateTime bookingEnd)
+        {
+            booking.BookingStart = bookingStart;
+            booking.BookingEnd = bookingEnd;
+
+            await _context.SaveChangesAsync();
+        }
 	}
 }

@@ -20,7 +20,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("getalltables")]
+		[Route("getAllTables")]
 		public async Task<ActionResult<IEnumerable<Table>>> GetAllTables()
 		{
 			var tableList = await _tableServices.GetAllTablesAsync();
@@ -28,7 +28,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpGet]
-		[Route("gettablebyid/{tableId}")]
+		[Route("getTableById/{tableId}")]
 		public async Task<ActionResult<Table>> GetTableById(int tableId)
 		{
 			var table = await _tableServices.GetTableByIdAsync(tableId);
@@ -38,7 +38,7 @@ namespace Lab1.Controllers
 
 
 		[HttpGet]
-		[Route("gettablebookingsbyid/{tableId}")]
+		[Route("getTableBookingsById/{tableId}")]
 
 		public async Task<ActionResult<BookingViewModel>> GetAllTableBookingsByTableId(int tableId)
 		{
@@ -47,7 +47,7 @@ namespace Lab1.Controllers
 			return Ok(bookingsList);
 		}
 		[HttpPost]
-		[Route("addtable")]
+		[Route("addTable")]
 
 		public async Task<ActionResult> AddNewTable(int capacity)
 		{
@@ -56,7 +56,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpDelete]
-		[Route("deletetable")]
+		[Route("deleteTable")]
 
 		public async Task<ActionResult> DeleteTableById(int tableId)
 		{
@@ -65,7 +65,7 @@ namespace Lab1.Controllers
 		}
 
 		[HttpPatch]
-		[Route("updatetable")]
+		[Route("updateTable")]
 		public async Task<ActionResult> UpdateTableById(int newCapacity, int tableId)
 		{
 			await _tableServices.UpdateTableAsync(newCapacity, tableId);

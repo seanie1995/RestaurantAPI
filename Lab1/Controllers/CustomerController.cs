@@ -21,7 +21,7 @@ namespace Lab1.Controllers
         }
 
         [HttpGet]
-        [Route("getallcustomers")]
+        [Route("getAllCustomers")]
         public async Task<ActionResult<IEnumerable<CustomerViewModel>>> GetAllCustomers()
         {
             var customerList = await _services.GetAllCustomersAsync();
@@ -38,7 +38,7 @@ namespace Lab1.Controllers
         }
 
         [HttpPost]
-        [Route("addcustomer")]
+        [Route("addCustomer")]
         public async Task<ActionResult> AddCustomer(CustomerDTO customer)
         {
             await _services.AddCustomerAsync(customer);
@@ -46,7 +46,7 @@ namespace Lab1.Controllers
         }
 
         [HttpPatch]
-        [Route("updatecustomerinfo")]
+        [Route("updateCustomerInfo/{customerId}")]
         public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
         {
            
@@ -55,7 +55,7 @@ namespace Lab1.Controllers
         }
 
         [HttpDelete]
-        [Route("deletecustomer")]
+        [Route("deleteCustomer")]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
             await _services.DeleteCustomerAsync(id);
