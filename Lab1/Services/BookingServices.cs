@@ -102,11 +102,11 @@ namespace Lab1.Services
             return bookingViewModel;
         }
 
-        public async Task UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking)
+        public async Task UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking) // This method is not used. Controller is commented out and cannot be accessed
         {
             var bookingToUpdate = await _bookingRepo.GetBookingByIdAsync(existingBookingId);
 
-            var tableToCheck = await _tableRepo.GetTableByIdAsync(bookingToUpdate.FK_TableId.Value);
+            var tableToCheck = await _tableRepo.GetTableByIdAsync(bookingToUpdate.FK_TableId);
            
 			var hasSeats = await CheckIfTableHasEnoughSeatsAsync(tableToCheck.Id, updatedBooking.PartySize);
             var hasAvailableTime = await CheckIfTableIsAvailableAsync(tableToCheck.Id, updatedBooking.BookingStart, updatedBooking.BookingEnd);
@@ -169,16 +169,19 @@ namespace Lab1.Services
 			}        
         }
 
-        public async Task UpdateBookingTimeAsync(int bookingId, DateTime bookingStart, DateTime bookendEnd)
+        public async Task UpdateBookingTimeAsync(int bookingId, BookingTimeDTO newBookingTime)
         {
             var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
 
-            if (!await CheckIfTableIsAvailableAsync(booking.Table.Id, bookingStart, bookendEnd))
+            DateTime bookingStart = newBookingTime.BookingStart;
+            DateTime bookingEnd = newBookingTime.BookingEnd;
+
+            if (!await CheckIfTableIsAvailableAsync(booking.FK_TableId, bookingStart, bookingEnd))
             {
                 throw new Exception("Time slot not available");
             }
 
-            await _bookingRepo.UpdateBookingTimeAsync(booking, bookingStart, bookendEnd);
+            await _bookingRepo.UpdateBookingTimeAsync(booking, newBookingTime.BookingStart, newBookingTime.BookingEnd);
         }
 
         public async Task UpdateBookingPartySizeAsync(int bookingId, int partySize)
@@ -186,7 +189,7 @@ namespace Lab1.Services
            
             var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
 
-            var tableId = booking.Table.Id;
+            var tableId = booking.FK_TableId;
 
             if(!await CheckIfTableHasEnoughSeatsAsync(tableId, partySize))
             {

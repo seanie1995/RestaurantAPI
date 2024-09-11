@@ -82,27 +82,27 @@ namespace Lab1.Api.Controllers
 		}
 
 		// PUT: api/booking/{id}
+		//[HttpPatch]
+		//[Route("updateBookingById/{bookingId}")]
+		//public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
+		//{
+		//	if (bookingId == null)
+		//	{
+		//		return BadRequest("Input cannot be null");
+		//	}
+
+		//	var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
+		//	if (booking == null)
+		//	{
+		//		return NotFound();
+		//	}
+
+		//	await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
+		//	return NoContent();
+		//}
+
 		[HttpPatch]
-		[Route("updateBookingById/{bookingId}")]
-		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
-		{
-			if (bookingId == null)
-			{
-				return BadRequest("Input cannot be null");
-			}
-
-			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
-			if (booking == null)
-			{
-				return NotFound();
-			}
-
-			await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
-			return NoContent();
-		}
-
-		[HttpPatch]
-		[Route("updateBookingTable/{tableId}")]
+		[Route("updateBookingTable/{bookingId}")]
 		public async Task<ActionResult> UpdateBookingTable(int tableId, int bookingId)
 		{
 			if (tableId == null || bookingId == null)
@@ -131,14 +131,14 @@ namespace Lab1.Api.Controllers
 
 		[HttpPatch]
 		[Route("updateBookingTime/{bookingId}")]
-		public async Task<ActionResult> UpdateBookingTime(int bookingId, DateTime bookingStart, DateTime bookingEnd)
+		public async Task<ActionResult> UpdateBookingTime(int bookingId, [FromBody] BookingTimeDTO newBookingTime)
 		{
-			if (bookingId == null || bookingStart == null || bookingEnd == null)
+			if (bookingId == null || newBookingTime.BookingStart == null || newBookingTime.BookingEnd == null)
 			{
 				return BadRequest("Input cannot be null");
 			}
 
-			await _bookingServices.UpdateBookingTimeAsync(bookingId, bookingStart, bookingEnd);
+			await _bookingServices.UpdateBookingTimeAsync(bookingId, newBookingTime);
 
 			return Ok();
 		}

@@ -15,7 +15,7 @@ namespace Lab1.Models
         public DateTime BookingEnd { get; set; }
 
         [ForeignKey("Table")]
-        public int? FK_TableId { get; set; }
+        public int FK_TableId { get; set; }
 
         [ForeignKey("Customer")]
         [Required]

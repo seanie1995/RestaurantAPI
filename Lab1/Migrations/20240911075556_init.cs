@@ -65,7 +65,7 @@ namespace Lab1.Migrations
                     PartySize = table.Column<int>(type: "int", nullable: false),
                     BookingStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BookingEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FK_TableId = table.Column<int>(type: "int", nullable: true),
+                    FK_TableId = table.Column<int>(type: "int", nullable: false),
                     FK_CustomerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -81,7 +81,8 @@ namespace Lab1.Migrations
                         name: "FK_Booking_Table_FK_TableId",
                         column: x => x.FK_TableId,
                         principalTable: "Table",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(

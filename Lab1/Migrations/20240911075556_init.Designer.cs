@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab1.Migrations
 {
     [DbContext(typeof(RestaurantContext))]
-    [Migration("20240830132920_init")]
+    [Migration("20240911075556_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -42,7 +42,7 @@ namespace Lab1.Migrations
                     b.Property<int>("FK_CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FK_TableId")
+                    b.Property<int>("FK_TableId")
                         .HasColumnType("int");
 
                     b.Property<int>("PartySize")
@@ -197,7 +197,9 @@ namespace Lab1.Migrations
 
                     b.HasOne("Lab1.Models.Table", "Table")
                         .WithMany("Bookings")
-                        .HasForeignKey("FK_TableId");
+                        .HasForeignKey("FK_TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 
