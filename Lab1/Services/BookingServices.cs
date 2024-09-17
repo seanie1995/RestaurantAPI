@@ -210,9 +210,7 @@ namespace Lab1.Services
 			}
 
 			foreach (var booking in bookingsList)
-			{
-				// Ignore the current booking being updated
-			
+			{		
 				// Check for overlap
 				if ((booking.BookingStart == bookingStart && booking.BookingEnd == bookingEnd) ||
 	                (booking.BookingStart <= bookingEnd && booking.BookingEnd >= bookingStart))
