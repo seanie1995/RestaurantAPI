@@ -35,6 +35,11 @@ namespace Lab1.Data
                     new Table { Id = 4, Capacity = 6 },
                     new Table { Id = 5, Capacity = 8 }
                 );
+
+            modelBuilder.Entity<Admin>().HasData
+                (
+                    new Admin { Id = 1, Name = "Admin", Password = "12345"}
+                );
         }
     }
 }
