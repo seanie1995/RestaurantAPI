@@ -7,7 +7,7 @@ namespace Lab1.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
 

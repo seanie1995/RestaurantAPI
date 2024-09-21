@@ -4,7 +4,10 @@ using Lab1.Data.Repos;
 using Lab1.Data.Repos.IRepos;
 using Lab1.Services;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Lab1
 {
@@ -13,6 +16,29 @@ namespace Lab1
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            DotNetEnv.Env.Load();
+
+            var key = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+
+                };
+            });
 
             // Add services to the container.
             builder.Services.AddDbContext<RestaurantContext>(options =>
