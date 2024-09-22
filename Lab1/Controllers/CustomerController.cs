@@ -55,7 +55,7 @@ namespace Lab1.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteCustomer")]
+        [Route("deleteCustomer/{id}")]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
             await _services.DeleteCustomerAsync(id);

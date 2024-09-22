@@ -47,20 +47,22 @@ namespace Lab1.Controllers
 		}
 
 		[HttpDelete]
-		[Route("deleteDishById")]
+		[Route("deleteDishById/{dishId}")]
 		public async Task<ActionResult> DeleteDish(int dishId)
 		{
 			await _dishServices.DeleteDishAsync(dishId);
 			return Ok();
 		}
 
-		[HttpPatch]
-		[Route("updateDish/{dishId}")]
+		[HttpPut]
+		[Route("updateDishById/{dishId}")]
 
 		public async Task<ActionResult> UpdateDish(int dishId, DishDTO newDish)
 		{
-			await _dishServices.UpdateDishAsync(dishId, newDish);
-			return Ok();
+            Console.WriteLine(newDish.Availability);
+            await _dishServices.UpdateDishAsync(dishId, newDish);
+			
+            return Ok();
 		}
 	}
 }

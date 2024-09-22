@@ -19,7 +19,7 @@ namespace Lab1.Services
 			{
 				Name = newDish.Name,
 				Price = newDish.Price,
-				Availability = newDish.Availabilty
+				Availability = newDish.Availability
 			};
 
 			await _dishRepo.AddDishAsync(dish);
@@ -69,7 +69,7 @@ namespace Lab1.Services
 			{
 				Name = updatedDIsh.Name,
 				Price = updatedDIsh.Price,
-				Availability = updatedDIsh.Availabilty
+				Availability = updatedDIsh.Availability
 			};
 
 			await _dishRepo.UpdateDishAsync(existingDish, newDish);

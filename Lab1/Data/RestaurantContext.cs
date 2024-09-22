@@ -7,8 +7,7 @@ namespace Lab1.Data
     {
         public RestaurantContext(DbContextOptions<RestaurantContext> options) : base(options) 
         { 
-        }
-        
+        }       
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Table> Table { get; set; }
         public DbSet<Dish> Dish { get; set; }
@@ -34,6 +33,11 @@ namespace Lab1.Data
                     new Table { Id = 3, Capacity = 2 },
                     new Table { Id = 4, Capacity = 6 },
                     new Table { Id = 5, Capacity = 8 }
+                );
+
+            modelBuilder.Entity<Admin>().HasData
+                (
+                    new Admin { Id = 1, UserName = "admin", Password = "password" }
                 );
         }
     }
