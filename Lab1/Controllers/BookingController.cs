@@ -82,7 +82,7 @@ namespace Lab1.Api.Controllers
 		}
 
 		// PUT: api/booking/{id}
-		[HttpPatch]
+		[HttpPut]
 		[Route("updateBookingById/{bookingId}")]
 		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
