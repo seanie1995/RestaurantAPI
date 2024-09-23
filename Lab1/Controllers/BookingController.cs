@@ -69,7 +69,7 @@ namespace Lab1.Api.Controllers
 
 		// POST: api/booking
 		[HttpPost]
-		[Route("addBooking")]
+		[Route("addBooking/{customerId}")]
 		public async Task<ActionResult> AddBooking([FromBody] BookingDTO bookingDto, int customerId)
 		{
 			if (customerId == null)
@@ -82,66 +82,66 @@ namespace Lab1.Api.Controllers
 		}
 
 		// PUT: api/booking/{id}
+		[HttpPatch]
+		[Route("updateBookingById/{bookingId}")]
+		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
+		{
+			if (bookingId == null)
+			{
+				return BadRequest("Input cannot be null");
+			}
+
+			var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
+			if (booking == null)
+			{
+				return NotFound();
+			}
+
+			await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
+			return NoContent();
+		}
+
 		//[HttpPatch]
-		//[Route("updateBookingById/{bookingId}")]
-		//public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
+		//[Route("updateBookingTable/{bookingId}")]
+		//public async Task<ActionResult> UpdateBookingTable(int tableId, int bookingId)
 		//{
-		//	if (bookingId == null)
+		//	if (tableId == null || bookingId == null)
 		//	{
 		//		return BadRequest("Input cannot be null");
 		//	}
 
-		//	var booking = await _bookingServices.GetBookingByIdAsync(bookingId);
-		//	if (booking == null)
-		//	{
-		//		return NotFound();
-		//	}
+		//	await _bookingServices.UpdateBookingTableAsync(tableId, bookingId);
 
-		//	await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
-		//	return NoContent();
+		//	return Ok();
 		//}
 
-		[HttpPatch]
-		[Route("updateBookingTable/{bookingId}")]
-		public async Task<ActionResult> UpdateBookingTable(int tableId, int bookingId)
-		{
-			if (tableId == null || bookingId == null)
-			{
-				return BadRequest("Input cannot be null");
-			}
+		//[HttpPatch]
+		//[Route("updateBookingPartySize/{bookingId}")]
+		//public async Task<ActionResult> UpdateBookingPartySize(int bookingId, int partySize)
+		//{
+		//	if (bookingId == null || partySize == 0)
+		//	{
+		//		return BadRequest("Input cannot be null");
+		//	}
 
-			await _bookingServices.UpdateBookingTableAsync(tableId, bookingId);
+		//	await _bookingServices.UpdateBookingPartySizeAsync(bookingId, partySize);
 
-			return Ok();
-		}
+		//	return Ok();
+		//}
 
-		[HttpPatch]
-		[Route("updateBookingPartySize/{bookingId}")]
-		public async Task<ActionResult> UpdateBookingPartySize(int bookingId, int partySize)
-		{
-			if (bookingId == null || partySize == 0)
-			{
-				return BadRequest("Input cannot be null");
-			}
+		//[HttpPatch]
+		//[Route("updateBookingTime/{bookingId}")]
+		//public async Task<ActionResult> UpdateBookingTime(int bookingId, [FromBody] BookingTimeDTO newBookingTime)
+		//{
+		//	if (bookingId == null || newBookingTime.BookingStart == null || newBookingTime.BookingEnd == null)
+		//	{
+		//		return BadRequest("Input cannot be null");
+		//	}
 
-			await _bookingServices.UpdateBookingPartySizeAsync(bookingId, partySize);
+		//	await _bookingServices.UpdateBookingTimeAsync(bookingId, newBookingTime);
 
-			return Ok();
-		}
-
-		[HttpPatch]
-		[Route("updateBookingTime/{bookingId}")]
-		public async Task<ActionResult> UpdateBookingTime(int bookingId, [FromBody] BookingTimeDTO newBookingTime)
-		{
-			if (bookingId == null || newBookingTime.BookingStart == null || newBookingTime.BookingEnd == null)
-			{
-				return BadRequest("Input cannot be null");
-			}
-
-			await _bookingServices.UpdateBookingTimeAsync(bookingId, newBookingTime);
-
-			return Ok();
-		}
+		//	return Ok();
+		//}
 
 		// DELETE: api/booking/{id}
 		[HttpDelete]
