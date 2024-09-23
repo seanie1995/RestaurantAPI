@@ -29,7 +29,7 @@ namespace Lab1.Controllers
         }
 
         [HttpGet]
-        [Route("customer/{customerId}")]
+        [Route("getCustomerById/{customerId}")]
         public async Task<ActionResult<CustomerViewModel>> GetCustomerById(int customerId)
         {
             var customer = await _services.GetCustomerByIdAsync(customerId);
@@ -45,7 +45,7 @@ namespace Lab1.Controllers
             return Ok($"Customer with email: {customer.Email} has been added");
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("updateCustomerInfo/{customerId}")]
         public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
         {
