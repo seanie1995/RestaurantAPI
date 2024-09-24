@@ -46,14 +46,15 @@ namespace Lab1.Data.Repos
         {
             var existingBooking = await _context.Booking.FindAsync(booking.Id);
 
-            if (existingBooking != null)
+            if (existingBooking != null )
             {
                 existingBooking.PartySize = updateBooking.PartySize;
                 existingBooking.BookingStart = updateBooking.BookingStart;
                 existingBooking.BookingEnd = updateBooking.BookingEnd;
+                existingBooking.FK_TableId = updateBooking.FK_TableId;
             }
-
-            await _context.SaveChangesAsync();
+		
+			await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetCustomerBookingsByCustomerIdAsync(int customerId)

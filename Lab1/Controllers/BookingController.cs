@@ -86,6 +86,8 @@ namespace Lab1.Api.Controllers
 		[Route("updateBookingById/{bookingId}")]
 		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
+			
+
 			if (bookingId == null)
 			{
 				return BadRequest("Input cannot be null");

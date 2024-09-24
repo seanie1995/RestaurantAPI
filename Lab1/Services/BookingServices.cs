@@ -102,32 +102,39 @@ namespace Lab1.Services
             return bookingViewModel;
         }
 
-        public async Task UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking) // This method is not used. Controller is commented out and cannot be accessed
+        public async Task UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking) 
         {
             var bookingToUpdate = await _bookingRepo.GetBookingByIdAsync(existingBookingId);
 
             var tableToCheck = await _tableRepo.GetTableByIdAsync(bookingToUpdate.FK_TableId);
            
 			var hasSeats = await CheckIfTableHasEnoughSeatsAsync(tableToCheck.Id, updatedBooking.PartySize);
-            var hasAvailableTime = await CheckIfTableIsAvailableAsync(tableToCheck.Id, updatedBooking.BookingStart, updatedBooking.BookingEnd);
-
+			
             if (!hasSeats)
-            {
-                throw new Exception("Table does not have enough seats");
-            }
-            if (!hasAvailableTime)
-            {
-                throw new Exception("Table is already booked for this time slot");
-            }
+			{
+				throw new Exception("Table does not have enough seats");
+			}
 
-			var newBooking = new Booking
+            bool timesChanged = updatedBooking.BookingStart != bookingToUpdate.BookingStart || updatedBooking.BookingEnd != bookingToUpdate.BookingEnd || updatedBooking.CustomerId != bookingToUpdate.FK_CustomerId;
+                
+			if (timesChanged || updatedBooking.TableId != bookingToUpdate.FK_TableId)
+			{
+				var hasAvailableTime = await CheckIfTableIsAvailableAsync(updatedBooking.TableId, updatedBooking.BookingStart, updatedBooking.BookingEnd);
+				if (!hasAvailableTime)
+				{
+					throw new Exception("The table is already booked for this time slot.");
+				}
+			}
+		          
+			var newBooking2 = new Booking
 			{
 				PartySize = updatedBooking.PartySize,
 				BookingStart = updatedBooking.BookingStart,
 				BookingEnd = updatedBooking.BookingEnd,
+                FK_TableId = updatedBooking.TableId,
 			};
 
-			await _bookingRepo.UpdateBookingAsync(bookingToUpdate, newBooking);
+			await _bookingRepo.UpdateBookingAsync(bookingToUpdate, newBooking2);
             
         }
 
