@@ -47,7 +47,7 @@ namespace Lab1.Controllers
 			return Ok(bookingsList);
 		}
 		[HttpPost]
-		[Route("addTable")]
+		[Route("addTable/{capacity}")]
 
 		public async Task<ActionResult> AddNewTable(int capacity)
 		{
@@ -56,19 +56,19 @@ namespace Lab1.Controllers
 		}
 
 		[HttpDelete]
-		[Route("deleteTable")]
+		[Route("deleteTableById/{id}")]
 
-		public async Task<ActionResult> DeleteTableById(int tableId)
+		public async Task<ActionResult> DeleteTableById(int id)
 		{
-			await _tableServices.DeleteTableByIdAsync(tableId);
+			await _tableServices.DeleteTableByIdAsync(id);
 			return Ok();
 		}
 
-		[HttpPatch]
-		[Route("updateTable")]
-		public async Task<ActionResult> UpdateTableById(int newCapacity, int tableId)
+		[HttpPut]
+		[Route("updateTable/{id}/{newCapacity}")]
+		public async Task<ActionResult> UpdateTableById(int newCapacity, int id)
 		{
-			await _tableServices.UpdateTableAsync(newCapacity, tableId);
+			await _tableServices.UpdateTableAsync(newCapacity, id);
 			return Ok();
 		}
 
