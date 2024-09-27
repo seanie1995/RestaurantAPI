@@ -19,8 +19,6 @@ namespace Lab1
 
             DotNetEnv.Env.Load();
 
-            var key = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -32,10 +30,13 @@ namespace Lab1
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateIssuerSigningKey = true,                
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,         
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
 
                 };
             });
@@ -59,6 +60,8 @@ namespace Lab1
 			builder.Services.AddScoped<IDishRepo, DishRepo>();
 
 			var app = builder.Build();
+            app.UseAuthentication();
+            app.UseAuthorization(); 
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

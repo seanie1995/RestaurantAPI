@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lab1.Models;
 using Lab1.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab1.Controllers
 {
@@ -46,6 +47,7 @@ namespace Lab1.Controllers
 			return Ok();
 		}
 
+		[Authorize]
 		[HttpDelete]
 		[Route("deleteDishById/{dishId}")]
 		public async Task<ActionResult> DeleteDish(int dishId)

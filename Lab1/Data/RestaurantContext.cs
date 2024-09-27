@@ -12,6 +12,7 @@ namespace Lab1.Data
         public DbSet<Table> Table { get; set; }
         public DbSet<Dish> Dish { get; set; }
         public DbSet<Booking> Booking {  get; set; }
+        public DbSet<Admin> Admin { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,11 +35,7 @@ namespace Lab1.Data
                     new Table { Id = 4, Capacity = 6 },
                     new Table { Id = 5, Capacity = 8 }
                 );
-
-            modelBuilder.Entity<Admin>().HasData
-                (
-                    new Admin { Id = 1, UserName = "admin", Password = "password" }
-                );
+          
         }
     }
 }
