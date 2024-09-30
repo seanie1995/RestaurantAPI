@@ -27,8 +27,8 @@ namespace Lab1.Controllers
 
 			return Ok(dishList);
 		}
-
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		[Route("getDishById/{dishId}")]
 
 		public async Task<ActionResult<Dish>> GetDishById(int dishId)
@@ -37,8 +37,8 @@ namespace Lab1.Controllers
 
 			return Ok(dish);
 		}
-
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		[Route("addNewDish")]
 		public async Task<ActionResult> AddDish(DishDTO dish)
 		{
@@ -55,8 +55,8 @@ namespace Lab1.Controllers
 			await _dishServices.DeleteDishAsync(dishId);
 			return Ok();
 		}
-
-		[HttpPut]
+        [Authorize]
+        [HttpPut]
 		[Route("updateDishById/{dishId}")]
 
 		public async Task<ActionResult> UpdateDish(int dishId, DishDTO newDish)

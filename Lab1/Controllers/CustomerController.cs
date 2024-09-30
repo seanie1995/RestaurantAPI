@@ -3,11 +3,13 @@ using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
 using Lab1.Services;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lab1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase

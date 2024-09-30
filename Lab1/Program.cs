@@ -58,6 +58,8 @@ namespace Lab1
             builder.Services.AddScoped<IBookingRepo, BookingRepo>();
 			builder.Services.AddScoped<IDishServices, DishServices>();
 			builder.Services.AddScoped<IDishRepo, DishRepo>();
+            builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+            builder.Services.AddScoped<IAdminServices, AdminServices>();
 
 			var app = builder.Build();
             app.UseAuthentication();

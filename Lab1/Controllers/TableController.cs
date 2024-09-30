@@ -2,13 +2,15 @@
 using Lab1.Models.ViewModels;
 using Lab1.Services;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Lab1.Controllers
 {
-	[Route("api/[controller]")]
+	[Authorize]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class TableController : ControllerBase
 	{

@@ -1,7 +1,13 @@
-﻿namespace Lab1.Services.IServices
+﻿using Lab1.Models;
+using Lab1.Models.DTOs;
+
+namespace Lab1.Services.IServices
 {
     public interface IAdminServices
     {
-        Task<string> AuthenticateAdminAsync(string username, string password);
+        Task RegisterAdminAsync(AdminDTO admin);
+        Task<string> AdminLoginAsync(AdminDTO admin);
+
+        Task<Admin> GetAdminByUserNameAsync(string userName);
     }
 }
