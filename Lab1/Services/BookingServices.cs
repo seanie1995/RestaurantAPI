@@ -4,6 +4,7 @@ using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
 using Lab1.Services.IServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Server.IIS;
 using System.Runtime.InteropServices.Marshalling;
 
@@ -86,7 +87,7 @@ namespace Lab1.Services
 
             if (booking == null)
             {
-                throw new Exception($"Booking with ID: {id} not found");
+                throw new Exception($"Booking with ID: {id} not found");              
             }
 
             var bookingViewModel = new BookingViewModel
@@ -206,7 +207,17 @@ namespace Lab1.Services
             await _bookingRepo.UpdateBookingPartySizeAsync(partySize, booking);
         }
 
+        public async Task AddBookingByCustomer(string email, BookingDTO booking)
+        {
+            var customer = await _customerRepo.GetCustomerByEmailAsync(email);
 
+            if (customer == null) 
+            {
+                throw new Exception("Customer does not exist");
+            }
+
+            await AddBookingAsync(customer.Id, booking);
+        }
         public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd)
 		{
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
@@ -233,6 +244,11 @@ namespace Lab1.Services
         {
             var table = await _tableRepo.GetTableByIdAsync(tableId);
            
+            if (table == null)
+            {
+                throw new Exception("Table does not exist!");
+            }
+
             return partySize <= table.Capacity;
         }
 	}

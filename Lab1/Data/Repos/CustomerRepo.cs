@@ -73,5 +73,12 @@ namespace Lab1.Data.Repos
 			}
 			customer.Bookings.Add(booking);
 		}
+
+        public async Task<Customer> GetCustomerByEmailAsync(string email)
+        {
+            var customer = await _context.Customer.SingleOrDefaultAsync(e => e.Email == email);
+
+            return customer;
+        }
 	}
 }

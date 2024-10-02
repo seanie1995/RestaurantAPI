@@ -12,8 +12,7 @@ namespace Lab1.Data.Repos.IRepos
         Task<IEnumerable<Booking>> GetCustomerBookingsByCustomerIdAsync(int customerId);
         Task UpdateBookingTableAsync(Table table, Booking booking);
         Task UpdateBookingPartySizeAsync(int partySize, Booking booking);
-        Task UpdateBookingTimeAsync(Booking booking, DateTime bookingStart, DateTime bookingEnd);
-
+        Task UpdateBookingTimeAsync(Booking booking, DateTime bookingStart, DateTime bookingEnd);   
 
     }
 }

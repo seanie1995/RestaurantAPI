@@ -12,6 +12,7 @@ namespace Lab1.Services.IServices
 		Task UpdateTableAsync(int capacity, int id);
 		Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId);
 
-		
-	}
+        Task<IEnumerable<Table>> GetAvailableTablesAsync(int partySize, DateTime bookingStart, DateTime bookendEnd);
+
+    }
 }

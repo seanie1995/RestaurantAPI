@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lab1.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -21,7 +21,7 @@ namespace Lab1.Controllers
         {
             _services = services;
         }
-
+        [Authorize]
         [HttpGet]
         [Route("getAllCustomers")]
         public async Task<ActionResult<IEnumerable<CustomerViewModel>>> GetAllCustomers()
@@ -29,7 +29,7 @@ namespace Lab1.Controllers
             var customerList = await _services.GetAllCustomersAsync();
             return Ok(customerList);
         }
-
+        [Authorize]
         [HttpGet]
         [Route("getCustomerById/{customerId}")]
         public async Task<ActionResult<CustomerViewModel>> GetCustomerById(int customerId)
@@ -46,7 +46,7 @@ namespace Lab1.Controllers
             await _services.AddCustomerAsync(customer);
             return Ok($"Customer with email: {customer.Email} has been added");
         }
-
+        [Authorize]
         [HttpPut]
         [Route("updateCustomerInfo/{customerId}")]
         public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
@@ -55,7 +55,7 @@ namespace Lab1.Controllers
             await _services.UpdateCustomerAsync(customerId, customer);
             return Ok("Customer information updated");
         }
-
+        [Authorize]
         [HttpDelete]
         [Route("deleteCustomer/{id}")]
         public async Task<ActionResult> DeleteCustomer(int id)

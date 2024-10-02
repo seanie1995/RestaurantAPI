@@ -93,6 +93,17 @@ namespace Lab1.Services
 			return bookingViewModelList;
 		}
 
-		
-	}
+		public async Task<IEnumerable<Table>> GetAvailableTablesAsync(int partySize, DateTime bookingStart, DateTime bookendEnd)
+		{
+			var availableTables = await _tableRepo.GetAvailableTablesAsync(partySize, bookingStart, bookendEnd);
+
+			if (availableTables == null)
+			{
+				throw new Exception("No available tables");
+			}
+
+			return availableTables;
+		}
+
+    }
 }

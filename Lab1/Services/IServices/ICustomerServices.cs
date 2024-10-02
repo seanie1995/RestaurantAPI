@@ -12,5 +12,6 @@ namespace Lab1.Services.IServices
         Task UpdateCustomerAsync(int id, CustomerDTO newCustomer);
         Task DeleteCustomerAsync(int id);
         Task<IEnumerable<Booking>> GetAllCustomerBookingsByIdAsync(int id);
+        Task<Customer> GetCustomerByEmailAsync(string email);
     }
 }

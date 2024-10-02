@@ -46,7 +46,19 @@ namespace Lab1
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
             builder.Services.AddControllers();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("LocalReact", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173/")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+                
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

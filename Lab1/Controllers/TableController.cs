@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Lab1.Controllers
 {
-	[Authorize]
+	
     [Route("api/[controller]")]
 	[ApiController]
 	public class TableController : ControllerBase
@@ -20,16 +20,16 @@ namespace Lab1.Controllers
 		{
 			_tableServices = tableServices;
 		}
-
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		[Route("getAllTables")]
 		public async Task<ActionResult<IEnumerable<Table>>> GetAllTables()
 		{
 			var tableList = await _tableServices.GetAllTablesAsync();
 			return Ok(tableList);
 		}
-
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		[Route("getTableById/{tableId}")]
 		public async Task<ActionResult<Table>> GetTableById(int tableId)
 		{
@@ -38,8 +38,8 @@ namespace Lab1.Controllers
 			return Ok(table);
 		}
 
-
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		[Route("getTableBookingsById/{tableId}")]
 
 		public async Task<ActionResult<BookingViewModel>> GetAllTableBookingsByTableId(int tableId)
@@ -48,7 +48,9 @@ namespace Lab1.Controllers
 
 			return Ok(bookingsList);
 		}
-		[HttpPost]
+
+        [Authorize]
+        [HttpPost]
 		[Route("addTable/{capacity}")]
 
 		public async Task<ActionResult> AddNewTable(int capacity)
@@ -57,7 +59,8 @@ namespace Lab1.Controllers
 			return Ok();
 		}
 
-		[HttpDelete]
+        [Authorize]
+        [HttpDelete]
 		[Route("deleteTableById/{id}")]
 
 		public async Task<ActionResult> DeleteTableById(int id)
@@ -66,14 +69,20 @@ namespace Lab1.Controllers
 			return Ok();
 		}
 
-		[HttpPut]
+        [Authorize]
+        [HttpPut]
 		[Route("updateTable/{id}/{newCapacity}")]
 		public async Task<ActionResult> UpdateTableById(int newCapacity, int id)
 		{
 			await _tableServices.UpdateTableAsync(newCapacity, id);
 			return Ok();
 		}
-
-
+		[HttpGet]
+		[Route("getAvailableTables")]
+		public async Task<ActionResult<Table>> GetAvailableTables(int partySize, DateTime bookingStart, DateTime bookingEnd)
+		{
+			var tables = await _tableServices.GetAvailableTablesAsync(partySize, bookingStart, bookingEnd);
+			return Ok(tables);
+		}
     }
 }

@@ -73,5 +73,14 @@ namespace Lab1.Data.Repos
 			return bookingsList;
 		}
 
-	}
+		public async Task<IEnumerable<Table>> GetAvailableTablesAsync(int partySize, DateTime bookingStart, DateTime bookingEnd)
+		{
+			var availableTables = await _context.Table
+				.Where(s => s.Capacity >= partySize)
+				.Where(t => !t.Bookings.Any(b => bookingStart < b.BookingEnd && bookingEnd > b.BookingStart))
+				.ToListAsync();
+
+			return availableTables;
+        }
+    }
 }

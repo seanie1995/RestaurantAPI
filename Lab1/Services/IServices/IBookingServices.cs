@@ -17,5 +17,7 @@ namespace Lab1.Services.IServices
         Task UpdateBookingTimeAsync(int bookingId, BookingTimeDTO newBookingTime);
         Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd);
         Task<bool> CheckIfTableHasEnoughSeatsAsync(int tableId, int partySize);
+
+        Task AddBookingByCustomer(string email, BookingDTO booking);
 	}
 }

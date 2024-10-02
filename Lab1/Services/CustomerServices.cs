@@ -116,5 +116,17 @@ namespace Lab1.Services
 
 			await _customerRepo.UpdateCustomerAsync(customerToUpdate, updatedCustomer);
         }
+
+        public async Task<Customer> GetCustomerByEmailAsync(string email)
+        {
+            var customer = await _customerRepo.GetCustomerByEmailAsync(email);
+
+            if (customer == null)
+            {
+                throw new Exception("Customer not found");
+            }
+
+            return customer;
+        }
     }
 }
