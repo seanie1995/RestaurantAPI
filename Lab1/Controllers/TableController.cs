@@ -1,4 +1,5 @@
 ﻿using Lab1.Models;
+using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
 using Lab1.Services;
 using Lab1.Services.IServices;
@@ -77,11 +78,11 @@ namespace Lab1.Controllers
 			await _tableServices.UpdateTableAsync(newCapacity, id);
 			return Ok();
 		}
-		[HttpGet]
+		[HttpPost]
 		[Route("getAvailableTables")]
-		public async Task<ActionResult<Table>> GetAvailableTables(int partySize, DateTime bookingStart, DateTime bookingEnd)
+		public async Task<ActionResult<Table>> GetAvailableTables(GetAvailableTablesDTO booking)
 		{
-			var tables = await _tableServices.GetAvailableTablesAsync(partySize, bookingStart, bookingEnd);
+			var tables = await _tableServices.GetAvailableTablesAsync(booking.partySize, booking.bookingStart, booking.bookingEnd);
 			return Ok(tables);
 		}
     }

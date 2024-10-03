@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lab1.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -51,7 +51,7 @@ namespace Lab1.Controllers
         [Route("updateCustomerInfo/{customerId}")]
         public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
         {
-           
+
             await _services.UpdateCustomerAsync(customerId, customer);
             return Ok("Customer information updated");
         }
@@ -63,5 +63,23 @@ namespace Lab1.Controllers
             await _services.DeleteCustomerAsync(id);
             return Ok("Customer deleted");
         }
+
+        [HttpGet]
+        [Route("getCustomerByEmail/{email}")]
+        public async Task<ActionResult<int>> GetCustomerIdByEmail(string email)
+        {
+            var customer = await _services.GetCustomerByEmailAsync(email);
+
+            if (customer == null)
+            {
+                return Ok(null);
+            }
+
+            var customerId = customer.Id;
+
+            return Ok(customerId);
+        }
+    
+    
     }
 }

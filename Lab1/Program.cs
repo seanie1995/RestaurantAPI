@@ -53,7 +53,7 @@ namespace Lab1
             {
                 options.AddPolicy("LocalReact", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173/")
+                    policy.WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
@@ -74,6 +74,7 @@ namespace Lab1
             builder.Services.AddScoped<IAdminServices, AdminServices>();
 
 			var app = builder.Build();
+            app.UseCors("LocalReact");
             app.UseAuthentication();
             app.UseAuthorization(); 
 
@@ -86,7 +87,7 @@ namespace Lab1
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+           
 
 
             app.MapControllers();
