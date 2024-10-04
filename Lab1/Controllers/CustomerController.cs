@@ -1,6 +1,7 @@
 ﻿using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
+using Lab1.Result;
 using Lab1.Services;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -21,20 +22,33 @@ namespace Lab1.Controllers
         {
             _services = services;
         }
+        
         [Authorize]
         [HttpGet]
         [Route("getAllCustomers")]
         public async Task<ActionResult<IEnumerable<CustomerViewModel>>> GetAllCustomers()
         {
             var customerList = await _services.GetAllCustomersAsync();
+
+            if (customerList == null)
+            {
+                return NotFound();
+			}
+
             return Ok(customerList);
         }
+        
         [Authorize]
         [HttpGet]
         [Route("getCustomerById/{customerId}")]
         public async Task<ActionResult<CustomerViewModel>> GetCustomerById(int customerId)
         {
             var customer = await _services.GetCustomerByIdAsync(customerId);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
 
             return customer;
         }
@@ -43,25 +57,27 @@ namespace Lab1.Controllers
         [Route("addCustomer")]
         public async Task<ActionResult> AddCustomer(CustomerDTO customer)
         {
-            await _services.AddCustomerAsync(customer);
-            return Ok($"Customer with email: {customer.Email} has been added");
+            var response = await _services.AddCustomerAsync(customer);
+            return Ok(response);
         }
+        
         [Authorize]
         [HttpPut]
         [Route("updateCustomerInfo/{customerId}")]
         public async Task<ActionResult> UpdateCustomer(int customerId, CustomerDTO customer)
         {
 
-            await _services.UpdateCustomerAsync(customerId, customer);
-            return Ok("Customer information updated");
+            var response = await _services.UpdateCustomerAsync(customerId, customer);
+            return Ok(response);
         }
+       
         [Authorize]
         [HttpDelete]
         [Route("deleteCustomer/{id}")]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
-            await _services.DeleteCustomerAsync(id);
-            return Ok("Customer deleted");
+            var response = await _services.DeleteCustomerAsync(id);
+            return Ok(response);
         }
 
         [HttpGet]
@@ -72,7 +88,7 @@ namespace Lab1.Controllers
 
             if (customer == null)
             {
-                return Ok(null);
+                return NotFound("Customer not found");
             }
 
             var customerId = customer.Id;

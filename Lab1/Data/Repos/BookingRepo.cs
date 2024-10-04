@@ -18,16 +18,20 @@ namespace Lab1.Data.Repos
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteBookingByIdAsync(int id)
+        public async Task<bool> DeleteBookingByIdAsync(int id)
         {
             var booking = await _context.Booking.FindAsync(id);
 
             if (booking != null)
             {
                 _context.Remove(booking);
+                await _context.SaveChangesAsync();
+                return true;
+            } else
+            {
+                return false;
             }
-
-            await _context.SaveChangesAsync();
+      
         }
 
         public async Task<IEnumerable<Booking>> GetAllBookingsAsync()

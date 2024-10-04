@@ -1,6 +1,7 @@
 ﻿using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
+using Lab1.Result;
 
 namespace Lab1.Services.IServices
 {
@@ -8,13 +9,11 @@ namespace Lab1.Services.IServices
     {
         Task<IEnumerable<BookingViewModel>> GetAllBookingsAsync();
         Task<BookingViewModel> GetBookingByIdAsync(int id);
-        Task AddBookingAsync(int customerId,  BookingDTO booking);
-        Task UpdateBookingAsync(int id, BookingDTO updateBooking);
-        Task DeleteBookingByIdAsync(int id);
+        Task<ServiceResult> AddBookingAsync(int customerId,  BookingDTO booking);
+        Task<ServiceResult> UpdateBookingAsync(int id, BookingDTO updateBooking);
+        Task<ServiceResult> DeleteBookingByIdAsync(int id);
         Task<IEnumerable<BookingViewModel>>GetCustomerBookingsByCustomerIdAsync(int customerId);
-		Task UpdateBookingTableAsync(int tableId, int bookingId);
-        Task UpdateBookingPartySizeAsync(int partySize, int bookingId);
-        Task UpdateBookingTimeAsync(int bookingId, BookingTimeDTO newBookingTime);
+		
         Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd);
         Task<bool> CheckIfTableHasEnoughSeatsAsync(int tableId, int partySize);
 

@@ -1,6 +1,7 @@
 ﻿using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
 using Lab1.Models.ViewModels;
+using Lab1.Result;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -24,16 +25,25 @@ namespace Lab1.Services
 			await _tableRepo.AddNewTableAsync(newTable);
 		}
 
-		public async Task DeleteTableByIdAsync(int id)
+		public async Task<ServiceResult> DeleteTableByIdAsync(int id)
 		{
 			var tableToDelete = await _tableRepo.GetTableByIdAsync(id);
 
 			if (tableToDelete == null)
 			{
-				throw new Exception($"Table with ID: {id} not found");
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "Table not found"
+				};
 			}
 
 			await _tableRepo.DeleteTableByIdAsync(id);
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Table deleted"
+			};
 		}
 
 		public async Task<IEnumerable<Table>> GetAllTablesAsync()
@@ -49,23 +59,32 @@ namespace Lab1.Services
 
 			if (table == null)
 			{
-				throw new Exception($"Table with ID: {id} not found");
+				return null;
 			}
 
 			return table;
 		}
 
-		public async Task UpdateTableAsync(int capacity, int id)
+		public async Task<ServiceResult> UpdateTableAsync(int capacity, int id)
 		{
 			var existingTable = await _tableRepo.GetTableByIdAsync(id);
 
 			if (existingTable == null) 
 			{
-				throw new Exception($"Table with ID: {id} not found.");
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "Table not found"
+				};
 			}
 
 			await _tableRepo.UpdateTableAsync(existingTable, capacity);
 
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Table updated"
+			};
 		}
 
 		public async Task<IEnumerable<BookingViewModel>> GetBookingsConnectedToTableByIdAsync(int tableId)
@@ -74,7 +93,7 @@ namespace Lab1.Services
 
 			if (existingTable == null)
 			{
-				throw new Exception($"Table with ID: {tableId} not found");
+				return null;
 			}
 
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
@@ -99,7 +118,7 @@ namespace Lab1.Services
 
 			if (availableTables == null)
 			{
-				throw new Exception("No available tables");
+				return null;
 			}
 
 			return availableTables;

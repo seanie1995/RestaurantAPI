@@ -1,6 +1,7 @@
 ﻿using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
 using Lab1.Models.DTOs;
+using Lab1.Result;
 
 namespace Lab1.Services
 {
@@ -13,7 +14,7 @@ namespace Lab1.Services
             _dishRepo = dishRepo;
         }
 
-        public async Task AddDishAsync(DishDTO newDish)
+        public async Task<ServiceResult> AddDishAsync(DishDTO newDish)
 		{
 			var dish = new Dish
 			{
@@ -23,18 +24,33 @@ namespace Lab1.Services
 			};
 
 			await _dishRepo.AddDishAsync(dish);
+
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Dish Added"
+			};
 		}
 
-		public async Task DeleteDishAsync(int id)
+		public async Task<ServiceResult> DeleteDishAsync(int id)
 		{
 			var Dish = await _dishRepo.GetDishByIdAsync(id);
 
 			if (Dish == null)
 			{
-				throw new Exception($"Dish with ID: {id} not found");
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "Dish not found"
+				};
 			}
 
 			await _dishRepo.DeleteDishAsync(id);
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Dish deleted"
+			};
 		}
 
 		public async Task<IEnumerable<Dish>> GetAllDishesAsync()
@@ -50,19 +66,23 @@ namespace Lab1.Services
 
 			if (Dish == null)
 			{
-				throw new Exception($"Dish with ID: {id} not found");
+				return null;
 			}
 
 			return Dish;
 		}
 
-		public async Task UpdateDishAsync(int dishId, DishDTO updatedDIsh)
+		public async Task<ServiceResult> UpdateDishAsync(int dishId, DishDTO updatedDIsh)
 		{
 			var existingDish = await _dishRepo.GetDishByIdAsync(dishId);
 
 			if (existingDish == null)
 			{
-				throw new Exception($"Dish with ID: {dishId} not found");
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "Dish not found"
+				};
 			}
 
 			var newDish = new Dish
@@ -73,6 +93,12 @@ namespace Lab1.Services
 			};
 
 			await _dishRepo.UpdateDishAsync(existingDish, newDish);
+
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Dish updated"
+			};
 		}
 	}
 }

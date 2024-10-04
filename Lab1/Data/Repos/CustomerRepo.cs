@@ -12,21 +12,27 @@ namespace Lab1.Data.Repos
         {
             _context = context;
         }
-        public async Task AddCustomerAsync(Customer customer)
+        public async Task<bool> AddCustomerAsync(Customer customer)
         {
             await _context.Customer.AddAsync(customer);
             await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task DeleteCustomerById(int id)
+        public async Task<bool> DeleteCustomerById(int id)
         {
             var customer = await _context.Customer.FindAsync(id);
             if (customer != null)
             {
                 _context.Customer.Remove(customer);
+            } else
+            {
+                return false;
             }
 
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
@@ -50,7 +56,7 @@ namespace Lab1.Data.Repos
             return customer;
         }
 
-        public async Task UpdateCustomerAsync(Customer existingCustomer, Customer updateCustomer)
+        public async Task<bool> UpdateCustomerAsync(Customer existingCustomer, Customer updateCustomer)
         {
             //var existingCustomer = await _context.Customer.FindAsync(customer.Id);
 
@@ -60,19 +66,15 @@ namespace Lab1.Data.Repos
                 existingCustomer.LastName = updateCustomer.LastName;
                 existingCustomer.Email = updateCustomer.Email;
             }
+            else
+            {
+                return false;
+            }
 
             await _context.SaveChangesAsync();
+            return true;
 
         }
-
-		public async Task AddBookingToCustomerAsync(Customer customer, Booking booking)
-        {
-			if (customer.Bookings == null)
-			{
-				customer.Bookings = new List<Booking>();
-			}
-			customer.Bookings.Add(booking);
-		}
 
         public async Task<Customer> GetCustomerByEmailAsync(string email)
         {
@@ -80,5 +82,16 @@ namespace Lab1.Data.Repos
 
             return customer;
         }
+
+
+		public async Task<bool> AddBookingToCustomerAsync(Customer customer, Booking booking)
+		{
+			if (customer.Bookings == null)
+			{
+				customer.Bookings = new List<Booking>();
+			}
+			customer.Bookings.Add(booking);
+			return true;
+		}
 	}
 }

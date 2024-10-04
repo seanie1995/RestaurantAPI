@@ -1,10 +1,11 @@
 ﻿using Lab1.Models;
 using Lab1.Models.DTOs;
+using Lab1.Result;
 
 public interface IDishServices
 {
 	// Create a new dish
-	Task AddDishAsync(DishDTO dish);
+	Task<ServiceResult> AddDishAsync(DishDTO dish);
 
 	// Read (retrieve) a dish by its ID
 	Task<Dish> GetDishByIdAsync(int id);
@@ -13,8 +14,8 @@ public interface IDishServices
 	Task<IEnumerable<Dish>> GetAllDishesAsync();
 
 	// Update an existing dish
-	Task UpdateDishAsync(int dishId, DishDTO updatedDish);
+	Task<ServiceResult> UpdateDishAsync(int dishId, DishDTO updatedDish);
 
 	// Delete a dish by its ID
-	Task DeleteDishAsync(int id);
+	Task<ServiceResult> DeleteDishAsync(int id);
 }

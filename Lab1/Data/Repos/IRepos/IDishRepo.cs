@@ -5,7 +5,7 @@ namespace Lab1.Data.Repos.IRepos
 	public interface IDishRepo
 	{
 		
-		Task AddDishAsync(Dish dish);
+		Task<bool> AddDishAsync(Dish dish);
 
 		
 		Task<Dish> GetDishByIdAsync(int id);
@@ -13,9 +13,9 @@ namespace Lab1.Data.Repos.IRepos
 		Task<IEnumerable<Dish>> GetAllDishesAsync();
 
 		
-		Task UpdateDishAsync(Dish existingDish, Dish updatedDish);
+		Task<bool> UpdateDishAsync(Dish existingDish, Dish updatedDish);
 
 		
-		Task DeleteDishAsync(int id);
+		Task<bool> DeleteDishAsync(int id);
 	}
 }

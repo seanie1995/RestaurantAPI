@@ -12,17 +12,30 @@ namespace Lab1.Data.Repos
         {
             _context = context;
         }
-        public async Task AddDishAsync(Dish dish)
+        public async Task<bool> AddDishAsync(Dish dish)
 		{
+			if (dish == null )
+			{
+				return false;
+			}
+
 			await _context.Dish.AddAsync(dish);
 			_context.SaveChanges();
+			return true;
 		}
 
-		public async Task DeleteDishAsync(int id)
+		public async Task<bool> DeleteDishAsync(int id)
 		{
 			var dishToDelete = await _context.Dish.FindAsync(id);
+
+			if (dishToDelete == null)
+			{
+				return false;
+			}
+
 			 _context.Dish.Remove(dishToDelete);
 			_context.SaveChanges();
+			return true;
 		}
 
 		public async Task<IEnumerable<Dish>> GetAllDishesAsync()
@@ -37,7 +50,7 @@ namespace Lab1.Data.Repos
 			return dish;
 		}
 
-		public async Task UpdateDishAsync(Dish existingDish, Dish updatedDish)
+		public async Task<bool> UpdateDishAsync(Dish existingDish, Dish updatedDish)
 		{
 			
 			if (existingDish != null)
@@ -48,6 +61,7 @@ namespace Lab1.Data.Repos
 			}
 
 			await _context.SaveChangesAsync();
+			return true;
 		}
 	}
 }

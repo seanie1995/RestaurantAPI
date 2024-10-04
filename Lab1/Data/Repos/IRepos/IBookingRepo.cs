@@ -8,7 +8,7 @@ namespace Lab1.Data.Repos.IRepos
         Task<Booking> GetBookingByIdAsync(int id);
         Task AddBookingAsync(Booking booking);
         Task UpdateBookingAsync(Booking booking, Booking updateBooking);
-        Task DeleteBookingByIdAsync(int id);
+        Task<bool> DeleteBookingByIdAsync(int id);
         Task<IEnumerable<Booking>> GetCustomerBookingsByCustomerIdAsync(int customerId);
         Task UpdateBookingTableAsync(Table table, Booking booking);
         Task UpdateBookingPartySizeAsync(int partySize, Booking booking);

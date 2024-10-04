@@ -3,6 +3,7 @@ using Lab1.Exceptions;
 using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
+using Lab1.Result;
 using Lab1.Services.IServices;
 
 namespace Lab1.Services
@@ -16,18 +17,26 @@ namespace Lab1.Services
             _customerRepo = customerRepo;
         }
 
-        public async Task AddCustomerAsync(CustomerDTO customer)
+        public async Task<ServiceResult> AddCustomerAsync(CustomerDTO customer)
         {
             // Validate the input before proceeding
             if (customer == null)
             {
-                throw new ArgumentNullException(nameof(customer), "Customer data cannot be null.");
-            }
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "No input"
+				};
+			}
 
             if (string.IsNullOrWhiteSpace(customer.LastName) || string.IsNullOrWhiteSpace(customer.Email))
             {
-                throw new ArgumentException("Last Name and Email cannot be blank.", nameof(customer.LastName));
-            }
+				return new ServiceResult
+				{
+					Success = false,
+					Message = "Fields cannot be blank"
+				};
+			}
 
             // If validation passes, proceed to create the Customer object
             var newCustomer = new Customer
@@ -39,19 +48,34 @@ namespace Lab1.Services
 
             // Save the new customer to the repository
             await _customerRepo.AddCustomerAsync(newCustomer);
-        }
 
-        public async Task DeleteCustomerAsync(int id)
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "New customer added"
+			};
+		}
+
+        public async Task<ServiceResult> DeleteCustomerAsync(int id)
         {
             var customerToDelete = await _customerRepo.GetCustomerByIdAsync(id);
 
             if (customerToDelete == null) 
             {
-                throw new NotFoundException("User not found");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Customer not found"
+                };
             }
 
             await _customerRepo.DeleteCustomerById(customerToDelete.Id);
-        }
+			return new ServiceResult
+			{
+				Success = true,
+				Message = "Customer destroyed"
+			};
+		}
 
         public Task<IEnumerable<Booking>> GetAllCustomerBookingsByIdAsync(int id)
         {
@@ -79,7 +103,7 @@ namespace Lab1.Services
 
             if (customer == null)
             {
-                throw new Exception($"Customer with ID: {id} not found.");
+                return null;
             }
 
             var customerViewModel = new CustomerViewModel
@@ -93,13 +117,17 @@ namespace Lab1.Services
             return customerViewModel;
         }
 
-        public async Task UpdateCustomerAsync(int id, CustomerDTO newCustomer)
+        public async Task<ServiceResult> UpdateCustomerAsync(int id, CustomerDTO newCustomer)
         {
             var customerToUpdate = await _customerRepo.GetCustomerByIdAsync(id);
 
             if (customerToUpdate == null)
             {
-				throw new Exception($"Customer with ID: {id} not found.");
+				return new ServiceResult
+				{
+					Success = false,
+					Message = $"Customer with ID:{id} not found"
+				};
 			}
 
             var updatedCustomer = new Customer
@@ -111,11 +139,16 @@ namespace Lab1.Services
 
 			if (string.IsNullOrWhiteSpace(newCustomer.LastName) || string.IsNullOrWhiteSpace(newCustomer.Email))
 			{
-				throw new ArgumentException("Last Name and Email cannot be blank.", nameof(newCustomer.LastName));
+				return new ServiceResult { Success = false, Message = "Inputs are blank" };
 			}
 
 			await _customerRepo.UpdateCustomerAsync(customerToUpdate, updatedCustomer);
-        }
+			return new ServiceResult
+			{
+				Success = true,
+				Message = $"Customer with ID:{id} updated"
+			};
+		}
 
         public async Task<Customer> GetCustomerByEmailAsync(string email)
         {
@@ -123,7 +156,7 @@ namespace Lab1.Services
 
             if (customer == null)
             {
-                throw new Exception("Customer not found");
+                return null;
             }
 
             return customer;

@@ -3,6 +3,7 @@ using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
@@ -81,8 +82,8 @@ namespace Lab1.Api.Controllers
 				return BadRequest("Input cannot be null");
 			}
 
-			await _bookingServices.AddBookingAsync(customerId, bookingDto);
-			return Ok();
+			var response = await _bookingServices.AddBookingAsync(customerId, bookingDto);
+			return Ok(response);
 		}
 
         // PUT: api/booking/{id}
@@ -92,7 +93,6 @@ namespace Lab1.Api.Controllers
 		public async Task<ActionResult> UpdateBooking(int bookingId, [FromBody] BookingDTO updatedBookingDto)
 		{
 			
-
 			if (bookingId == null)
 			{
 				return BadRequest("Input cannot be null");
@@ -104,8 +104,14 @@ namespace Lab1.Api.Controllers
 				return NotFound();
 			}
 
-			await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
-			return NoContent();
+			var response = await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
+
+			if (response.Success == false)
+			{
+				return BadRequest($"{response.Message}");
+			}
+
+			return Ok(response);
 		}
 
 
@@ -120,8 +126,8 @@ namespace Lab1.Api.Controllers
 				return BadRequest("Input cannot be null");
 			}
 
-			await _bookingServices.DeleteBookingByIdAsync(bookingId);
-			return NoContent();
+			var response = await _bookingServices.DeleteBookingByIdAsync(bookingId);
+			return Ok(response);
 		}
 	}
 }

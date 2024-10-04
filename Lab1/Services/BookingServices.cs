@@ -3,6 +3,7 @@ using Lab1.Data.Repos.IRepos;
 using Lab1.Models;
 using Lab1.Models.DTOs;
 using Lab1.Models.ViewModels;
+using Lab1.Result;
 using Lab1.Services.IServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Server.IIS;
@@ -23,13 +24,17 @@ namespace Lab1.Services
         }
 
 		// Method below takes a customerId and a bookingDTO. Customer is found and it's Id is automatically added to new booking
-		public async Task AddBookingAsync(int customerId, BookingDTO booking) 
+		public async Task<ServiceResult> AddBookingAsync(int customerId, BookingDTO booking) 
         {
             var newCustomer = await _customerRepo.GetCustomerByIdAsync(customerId);
 		    
             if (newCustomer == null)
             {
-                throw new Exception("Customer input is null");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Customer input is null"
+                };
             }
 
 			var hasSeats = await CheckIfTableHasEnoughSeatsAsync(booking.TableId, booking.PartySize);
@@ -37,11 +42,21 @@ namespace Lab1.Services
 
 			if (!hasSeats)
 			{
-				throw new Exception("Table does not have enough seats");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Table does not have enough seats"
+                };
+               
 			}
 			if (!hasAvailableTime)
 			{
-				throw new Exception("Table is already booked for this time slot");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Table is already booked for this time slot"
+                };
+                
 			}
 
 			var newBooking = new Booking
@@ -55,18 +70,32 @@ namespace Lab1.Services
             };
 
             await _bookingRepo.AddBookingAsync(newBooking);
-           	    		
+
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Booking Success"
+            };
         }
-        // Method below takes a booking ID, finds the booking with ID and deletes it. 
-        public async Task DeleteBookingByIdAsync(int id)
+       
+        public async Task<ServiceResult> DeleteBookingByIdAsync(int id)
         {          
             await _bookingRepo.DeleteBookingByIdAsync(id);
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Delete Success"
+            };
         }
-
-        // Method below returns a list of BookingViewModels
+    
         public async Task<IEnumerable<BookingViewModel>> GetAllBookingsAsync()
         {
             var bookingList = await _bookingRepo.GetAllBookingsAsync();
+
+            if (bookingList == null)
+            {
+                return null;
+            }
 
             var bookingListViewModels = bookingList.Select(b => new BookingViewModel
             {
@@ -80,14 +109,14 @@ namespace Lab1.Services
 
             return bookingListViewModels;
         }
-        // Method below takes a booking ID and returns booking with corresponding ID.
+        
         public async Task<BookingViewModel> GetBookingByIdAsync(int id)
         {
             var booking = await _bookingRepo.GetBookingByIdAsync(id);
 
             if (booking == null)
             {
-                throw new Exception($"Booking with ID: {id} not found");              
+                return null;
             }
 
             var bookingViewModel = new BookingViewModel
@@ -103,7 +132,7 @@ namespace Lab1.Services
             return bookingViewModel;
         }
 
-        public async Task UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking) 
+        public async Task<ServiceResult> UpdateBookingAsync(int existingBookingId, BookingDTO updatedBooking) 
         {
             var bookingToUpdate = await _bookingRepo.GetBookingByIdAsync(existingBookingId);
 
@@ -113,7 +142,11 @@ namespace Lab1.Services
 			
             if (!hasSeats)
 			{
-				throw new Exception("Table does not have enough seats");
+                return new ServiceResult
+                {
+                    Success = false,
+                    Message = "Table does not have enough seats"
+                };
 			}
 
             bool timesChanged = updatedBooking.BookingStart != bookingToUpdate.BookingStart || updatedBooking.BookingEnd != bookingToUpdate.BookingEnd || updatedBooking.CustomerId != bookingToUpdate.FK_CustomerId;
@@ -123,8 +156,12 @@ namespace Lab1.Services
 				var hasAvailableTime = await CheckIfTableIsAvailableAsync(updatedBooking.TableId, updatedBooking.BookingStart, updatedBooking.BookingEnd);
 				if (!hasAvailableTime)
 				{
-					throw new Exception("The table is already booked for this time slot.");
-				}
+                    return new ServiceResult
+                    {
+                        Success = false,
+                        Message = "Table is already booked for this time slot"
+                    };
+                }
 			}
 		          
 			var newBooking2 = new Booking
@@ -136,12 +173,22 @@ namespace Lab1.Services
 			};
 
 			await _bookingRepo.UpdateBookingAsync(bookingToUpdate, newBooking2);
-            
+            return new ServiceResult
+            {
+                Success = true,
+                Message = "Booking Updated"
+            };
+
         }
 
         public async Task<IEnumerable<BookingViewModel>> GetCustomerBookingsByCustomerIdAsync(int customerId)
         {
             var bookings = await _bookingRepo.GetCustomerBookingsByCustomerIdAsync(customerId);
+
+            if (bookings == null)
+            {
+                return null;
+            }
 
             var bookingsViewModels = bookings.Select(static b => new BookingViewModel
             {
@@ -154,57 +201,6 @@ namespace Lab1.Services
             }).ToList();
 
             return bookingsViewModels;
-        }
-
-        public async Task UpdateBookingTableAsync(int tableId, int bookingId)
-        {
-            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
-            var table = await _tableRepo.GetTableByIdAsync(tableId);
-            
-            if (!await CheckIfTableIsAvailableAsync(tableId, booking.BookingStart, booking.BookingEnd))
-            {
-                throw new Exception($"Table unavailable at this time slot");
-            }
-
-            if (!await CheckIfTableHasEnoughSeatsAsync(table.Id, booking.PartySize))
-            {
-                throw new Exception("Table does not have enough seats");
-            }
-            
-            else
-            {
-				await _bookingRepo.UpdateBookingTableAsync(table, booking);
-			}        
-        }
-
-        public async Task UpdateBookingTimeAsync(int bookingId, BookingTimeDTO newBookingTime)
-        {
-            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
-
-            DateTime bookingStart = newBookingTime.BookingStart;
-            DateTime bookingEnd = newBookingTime.BookingEnd;
-
-            if (!await CheckIfTableIsAvailableAsync(booking.FK_TableId, bookingStart, bookingEnd))
-            {
-                throw new Exception("Time slot not available");
-            }
-
-            await _bookingRepo.UpdateBookingTimeAsync(booking, newBookingTime.BookingStart, newBookingTime.BookingEnd);
-        }
-
-        public async Task UpdateBookingPartySizeAsync(int bookingId, int partySize)
-        {
-           
-            var booking = await _bookingRepo.GetBookingByIdAsync(bookingId);
-
-            var tableId = booking.FK_TableId;
-
-            if(!await CheckIfTableHasEnoughSeatsAsync(tableId, partySize))
-            {
-                throw new Exception("Table does not have enough seats.");
-            }
-
-            await _bookingRepo.UpdateBookingPartySizeAsync(partySize, booking);
         }
 
         public async Task AddBookingByCustomer(string email, BookingDTO booking)
@@ -221,12 +217,7 @@ namespace Lab1.Services
         public async Task<bool> CheckIfTableIsAvailableAsync(int tableId, DateTime bookingStart, DateTime bookingEnd)
 		{
 			var bookingsList = await _tableRepo.GetBookingsConnectedToTableByIdAsync(tableId);
-			
-			if (bookingsList == null)
-			{
-				throw new Exception("Booking or booking list not found");
-			}
-
+					
 			foreach (var booking in bookingsList)
 			{		
 				// Check for overlap
@@ -243,12 +234,7 @@ namespace Lab1.Services
 		public async Task<bool> CheckIfTableHasEnoughSeatsAsync(int tableId, int partySize)
         {
             var table = await _tableRepo.GetTableByIdAsync(tableId);
-           
-            if (table == null)
-            {
-                throw new Exception("Table does not exist!");
-            }
-
+                     
             return partySize <= table.Capacity;
         }
 	}
