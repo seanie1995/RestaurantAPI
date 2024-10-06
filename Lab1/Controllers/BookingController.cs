@@ -106,7 +106,7 @@ namespace Lab1.Api.Controllers
 
 			var response = await _bookingServices.UpdateBookingAsync(bookingId, updatedBookingDto);
 
-			if (response.Success == false)
+			if (response.Success == false)	
 			{
 				return BadRequest($"{response.Message}");
 			}
