@@ -87,9 +87,6 @@ namespace Lab1
 
             app.UseHttpsRedirection();
 
-           
-
-
             app.MapControllers();
 
             app.Run();
